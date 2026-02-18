@@ -28,8 +28,11 @@ class Solution:
             return "1"
         else:
 
-            unprocessed_result, repeats = division(numerator, denominator)
+            unprocessed_result, repeats, repeat_depth = division(numerator, denominator)
             print("unprocessed_result:", unprocessed_result)
+            print("repeats:", repeats)
+            print("repeat_depth:", repeat_depth)
+            input()
             if repeats:
                 ans = process_string(unprocessed_result)
             else:
@@ -63,19 +66,19 @@ def process_string(unprocessed):
             
 
 def division(numerator, denominator):
-    answer, repeats = divisionHelper(numerator, denominator, set())
-    return answer, repeats
+    answer, repeats, repeat_depth = divisionHelper(numerator, denominator, {}, 0)
+    return answer, repeats, repeat_depth
 
 
-def divisionHelper(numerator, denominator, seen_before):
+def divisionHelper(numerator, denominator, seen_before, depth):
     # print("numerator:", numerator)
     # print("denominator:", denominator)
     # print()
     state = (numerator, denominator)
     if state in seen_before:
-        return str(int(numerator/denominator)), True
-    seen_before.add(state)
-
+        return str(int(numerator/denominator)), True, seen_before[state]
+    seen_before[state] = depth
+    
     digits_so_far = ""
     while numerator < denominator:
         digits_so_far += "0"
@@ -87,10 +90,10 @@ def divisionHelper(numerator, denominator, seen_before):
     remainder = numerator - product
 
     if remainder == 0:
-        return digits_so_far, False
+        return digits_so_far, False, -1
     else:
-        remaining_string, repeats  = divisionHelper(remainder*10, denominator, seen_before)
-        return digits_so_far + remaining_string, repeats
+        remaining_string, repeats, repeat_depth = divisionHelper(remainder*10, denominator, seen_before, depth+1)
+        return digits_so_far + remaining_string, repeats, repeat_depth
     
 
 
