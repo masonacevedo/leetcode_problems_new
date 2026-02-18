@@ -6,5 +6,6 @@ if __name__ == "__main__":
     name = "_".join(name_strings)
 
     ans = name.replace(".","")
+    ans += ".py"
     print(ans)
     pyperclip.copy(ans)
