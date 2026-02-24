@@ -10,16 +10,6 @@ class Solution:
         while right < len(s) and left < len(s):
             leftChar = s[left]
             rightChar = s[right]
-            # print("left:", left)
-            # print("right:", right)
-            # print("leftChar:", leftChar)
-            # print("rightChar:", rightChar)
-            # print("current_substring:", current_substring)
-            # input()
-            
-            
-            
-
             if rightChar in current_substring:
                 doubledCharIndex = left + current_substring.index(rightChar)
                 left = doubledCharIndex + 1
@@ -30,18 +20,12 @@ class Solution:
                 current_substring += rightChar
                 right += 1
 
-        # bestSoFar = max(bestSoFar, (right - left)+1)
-        # print("answer:", bestSoFar)
         return bestSoFar 
 
 mySol = Solution()
-
-# ans = 
-
 
 assert(mySol.lengthOfLongestSubstring("pwwkew") == 3)
 assert(mySol.lengthOfLongestSubstring("bbbbbb") == 1)
 assert(mySol.lengthOfLongestSubstring("abcabcbb") == 3)
 assert(mySol.lengthOfLongestSubstring("tmmzuxt") == 5)
 assert(mySol.lengthOfLongestSubstring("aabaab!bb") == 3)
-# print("ans:", ans)
