@@ -14,8 +14,6 @@ class Solution:
         return ans
     
     def sumRootToLeafHelper(self, root):
-        # print("root.val:", root.val)        
-
         if (root.left is None) and (root.right is None):
             return [str(root.val)]
 
