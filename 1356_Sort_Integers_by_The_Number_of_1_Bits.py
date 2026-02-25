@@ -1,24 +1,20 @@
 from typing import List
 
-class customNum:
-    def __init__(self, x):
-        self.x = x
-    
-    def __lt__(self, other):
-        self_string = bin(self.x)[2:]
-        other_string = bin(other.x)[2:]
-        
-        if self_string.count("1") < other_string.count("1"):
-            return True
-        elif self_string.count("1") > other_string.count("1"):
-            return False
-        else:
-            return self.x < other.x
-
 class Solution:
     def sortByBits(self, arr: List[int]) -> List[int]:
-        return sorted(arr, key = lambda n: customNum(n))
+        pairs = [(bin(x)[2:], x) for x in arr]
 
+        # sort pairs according to number of 1s in the string
+        # and then use the integer in the pair as the
+        # tiebreaker.
+        sorted_pairs = sorted(pairs,
+                            key=lambda p: (
+                                p[0].count("1"),
+                                p[1]
+                                )
+                            )
+
+        return [p[1] for p in sorted_pairs]
 
 
 mySol = Solution()
