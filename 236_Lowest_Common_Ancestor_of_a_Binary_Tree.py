@@ -25,12 +25,7 @@ class Solution:
         parentList = []
 
         traverse(root, parentMap, parentList)
-        # for k,v in parentMap.items():
-        #     print(k, " | ", v)
-        # print("parentMap[p.val]:", parentMap[p.val])
-        # print("parentMap[q.val]:", parentMap[q.val])
         return lastCommonEntry(parentMap[p.val], parentMap[q.val])
-        # return parentMap
     
 
 def lastCommonEntry(l1, l2):
@@ -38,10 +33,6 @@ def lastCommonEntry(l1, l2):
         a = l1[i]
         for j in reversed(range(0, len(l2))):
             b = l2[j]
-            # print("a:", a)
-            # print("b:", b)
-            # print("a == b:", a == b)
-            # input()
             if a == b:
                 return a
     return None
