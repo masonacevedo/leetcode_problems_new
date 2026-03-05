@@ -1,161 +1,109 @@
 
 import random
-
-add = {
-
-    ("0","0"): ("0", "0"),
-    ("0","1"): ("0", "1"),
-    ("0","2"): ("0", "2"),
-    ("0","3"): ("0", "3"),
-    ("0","4"): ("0", "4"),
-    ("0","5"): ("0", "5"),
-    ("0","6"): ("0", "6"),
-    ("0","7"): ("0", "7"),
-    ("0","8"): ("0", "8"),
-    ("0","9"): ("0", "9"),
-
-
-    ("1","1"): ("0", "2"),
-    ("1","2"): ("0", "3"),
-    ("1","3"): ("0", "4"),
-    ("1","4"): ("0", "5"),
-    ("1","5"): ("0", "6"),
-    ("1","6"): ("0", "7"),
-    ("1","7"): ("0", "8"),
-    ("1","8"): ("0", "9"),
-    ("1","9"): ("1", "0"),
-
-    ("2","2"): ("0", "4"),
-    ("2","3"): ("0", "5"),
-    ("2","4"): ("0", "6"),
-    ("2","5"): ("0", "7"),
-    ("2","6"): ("0", "8"),
-    ("2","7"): ("0", "9"),
-    ("2","8"): ("1", "0"),
-    ("2","9"): ("1", "1"),
-
-    ("3","3"): ("0", "6"),
-    ("3","4"): ("0", "7"),
-    ("3","5"): ("0", "8"),
-    ("3","6"): ("0", "9"),
-    ("3","7"): ("1", "0"),
-    ("3","8"): ("1", "1"),
-    ("3","9"): ("1", "2"),
-
-    ("4","4"): ("0", "8"),
-    ("4","5"): ("0", "9"),
-    ("4","6"): ("1", "0"),
-    ("4","7"): ("1", "1"),
-    ("4","8"): ("1", "2"),
-    ("4","9"): ("1", "3"),
-
-    ("5","5"): ("1", "0"),
-    ("5","6"): ("1", "1"),
-    ("5","7"): ("1", "2"),
-    ("5","8"): ("1", "3"),
-    ("5","9"): ("1", "4"),
-
-    ("6","6"): ("1", "2"),
-    ("6","7"): ("1", "3"),
-    ("6","8"): ("1", "4"),
-    ("6","9"): ("1", "5"),
-
-    ("7","7"): ("1", "4"),
-    ("7","8"): ("1", "5"),
-    ("7","9"): ("1", "6"),
-
-    ("8","8"): ("1", "6"),
-    ("8","9"): ("1", "7"),
-
-    ("9","9"): ("1", "8"),
-
-}
-
-increment = {
-    "0":"1",
-    "1":"2",
-    "2":"3",
-    "3":"4",
-    "4":"5",
-    "5":"6",
-    "6":"7",
-    "7":"8",
-    "8":"9",
-}
-
 class Solution:
-    def getSum(self, a: int, b: int) -> int:
-        if a > b:
-            bigger, smaller = a,b
+    def getSum(a,b):
+        if a == 0:
+            return b
+        elif b == 0:
+            return a
+        elif a == -1*b:
+            return 0
+        elif a > 0 and b > 0:
+            return self.add(a,b)
+        
+        elif a < 0 and b < 0:
+            return -1*self.add(-1*a, -1*b)
+        
         else:
-            bigger, smaller = b,a 
+            if abs(a) > abs(b):
+                bigger, smaller = a, b
+            else:
+                bigger, smaller = b, a
+            
+            res = self.subtract(bigger,smaller)
+
+            if a > 0:
+                pos, neg = a, b
+            else:
+                pos, neg - b, a
+
+            if bigger == pos:
+                return res
+            else:
+                return -1*res
+    
+
+
+
         
         
-        bigStr = str(bigger)
-        smallStr = str(smaller)
+
         
-        fillerZeros = "0" * (len(bigStr) - len(smallStr))
-        smallStr = fillerZeros + smallStr
         
-        i = len(bigStr)-1
-        ans = ""
+
+    def add(self, a: int, b: int) -> int:
+
+        if a > b:
+            bigger, smaller = a, b
+        else:
+            bigger, smaller = b, a
+        
+        bigString = bin(bigger)[2:]
+        smallString = bin(smaller)[2:]
+
+        leadingZeros = "0" * (len(bigString) - len(smallString))
+        smallString = leadingZeros + smallString
+        
+
         carryOne = False
+        i = len(bigString) - 1
+        # print("bigString:  ", bigString)
+        # print("smallString:", smallString)
+        ans = ""
         while i >= 0:
-            topDigit = bigStr[i]
-            bottomDigit = smallStr[i]
-
             # print("i:", i)
-            # print("top:", topDigit)
-            # print("bot:", bottomDigit)
+
+            d1 = bigString[i]
+            d2 = smallString[i]
+            # print("d1:", d1)
+            # print("d2:", d2)
+            # print('carryOne:', carryOne)
+            # print()
             
-            pair = tuple(list(sorted([topDigit, bottomDigit])))
-            
+            digits = [d1, d2]
+            numOnes = digits.count("1")
+
             if carryOne:
-                partialResult = add[pair]
-                sumResult = addOne(partialResult)
-            else:
-                sumResult = add[pair]
+                numOnes += 1
 
-            
-            if sumResult[0] == "1":
-                carryOne = True
-            else:
+            if numOnes == 0:
+                ans += "0"
                 carryOne = False
-
-            ans += sumResult[1]
-
+            elif numOnes == 1:
+                ans += "1"
+                carryOne = False
+            elif numOnes == 2:
+                ans += "0"
+                carryOne = True
+            elif numOnes == 3:
+                ans += "1"
+                carryOne = True
+            
             i -= 1
-        
+
         if carryOne:
             ans += "1"
         
-        reversedAns = "".join(list(reversed(ans)))
-        # print("reversedAns:", reversedAns)
-        return int(reversedAns)
-
-
-def addOne(pair):
-    if pair == ("0", "9"):
-        return ("1", "0")
-    elif pair == ("1", "9"):
-        raise Exception("Invalid!!")
-    else:
-        return (pair[0] + increment[pair[1]])
+        finalBinString = "".join(list(reversed(ans)))
+        return int(finalBinString, 2)
 
 s = Solution()
+ans = s.getSum(17, 38)
 
-# 64367
-#   947
-#     
-
-# s.getSum(64367, 947)
-# a = 64367
-# b
-# assert()
-
-for _ in range(0, 10000):
-    a = random.randint(1, 999999)
-    b = random.randint(1, 999999)
-    print(a, " + ", b)
-
+for _ in range(0, 1000):
+    a = random.randint(1, 99999)
+    b = random.randint(1, 99999)
     assert(a + b == s.getSum(a,b))
+
+# print("ans:", ans)
+        
