@@ -2,7 +2,8 @@ class Solution:
     def fib(self, n: int) -> int:
         if n == 0:
             return 0
-        elif n == 1:
-            return 1
-        else:
-            return self.fib(n-1)+self.fib(n-2)
+        DP = [0, 1]
+
+        for i in range(2, n+1):
+            DP.append(DP[i-1]+DP[i-2])
+        return DP[-1]
