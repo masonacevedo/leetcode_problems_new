@@ -2,7 +2,23 @@ from typing import List
 
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        return robHelper(nums, memo={})
+        if len(nums) <= 2:
+            return max(nums)
+        return robDP(nums)
+
+def robDP(nums):
+    DP = [nums[0], max(nums[0:2])]
+    # print("nums:", nums)
+
+    for i in range(2, len(nums)):
+        useIt = nums[i] + DP[i-2]
+        loseIt = DP[i-1]
+        # print("DP:", DP)
+        # print("useIt:", useIt)
+        # print("loseIt:", loseIt)
+        DP.append(max(useIt, loseIt))
+    # print("DP:", DP)
+    return DP[-1]
 
 def robHelper(nums, memo):
     if tuple(nums) in memo:
@@ -20,7 +36,7 @@ def robHelper(nums, memo):
 
 
 
-nums = [1,2,3,1]
+nums = [2,1,1,2]
 mySol = Solution()
 ans = mySol.rob(nums)
 print("ans:", ans)
