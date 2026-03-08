@@ -5,16 +5,22 @@ class Solution:
     def change(self, amount: int, coins: List[int]) -> int:
         if amount == 0:
             return 1
-        return self.changeHelper(amount, sorted(coins))
+        return self.changeHelper(amount, sorted(coins), {})
     
-    def changeHelper(self, amount: int, coins: List[int]) -> int:
+    def changeHelper(self, amount: int, coins: List[int], memo) -> int:
         # print("amount:", amount)
         # print("coins:", coins)
         # print()
 
+
         if len(coins) == 0:
             return -1
         
+        k = (amount, tuple(coins))
+        if k in memo:
+            return memo[k]
+
+
         minCoin = coins[0]
         if amount < minCoin:
             return -1
@@ -30,7 +36,7 @@ class Solution:
             if remainingAmount == 0:
                 ans += 1
             else:
-                recursiveCall = self.changeHelper(remainingAmount, coins[1:])
+                recursiveCall = self.changeHelper(remainingAmount, coins[1:], memo)
                 # print("amount:", amount)
                 # print("minCoin:", minCoin)
                 # print("remainingAmount:", remainingAmount)
@@ -41,15 +47,15 @@ class Solution:
                 if recursiveCall != -1:
                     ans += recursiveCall
             
-
+        memo[k] = ans
         return ans
 
 
 
 s = Solution()
 
-amount = 10
-coins = [10]
+amount = 500
+coins = [3,5,7,8,9,10,11]
 
 ans = s.change(amount, coins)
 print("ans:", ans)
