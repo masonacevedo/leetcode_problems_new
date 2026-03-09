@@ -22,7 +22,7 @@ INSERT INTO Scores (score) VALUES (3.65);
 
 -- SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) FROM Scores ;
 
-SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) FROM (
+SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) as "rank" FROM (
     SELECT DISTINCT score FROM Scores ORDER BY score DESC
 ) as ranked;
 
