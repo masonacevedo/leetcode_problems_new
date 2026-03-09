@@ -9,7 +9,7 @@ INSERT INTO Scores (score) VALUES (4.00);
 INSERT INTO Scores (score) VALUES (3.65);
 
 
-SELECT s1.id, s1.score, COUNT(*)
+SELECT s1.score, COUNT(*) as 'rank'
 FROM Scores as s1 JOIN 
 (SELECT DISTINCT score FROM Scores ) 
 as s2
