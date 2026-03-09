@@ -9,13 +9,19 @@ INSERT INTO Scores (score) VALUES (4.00);
 INSERT INTO Scores (score) VALUES (3.65);
 
 
-SELECT s1.score, COUNT(*) as 'rank'
-FROM Scores as s1 JOIN 
-(SELECT DISTINCT score FROM Scores ) 
-as s2
-WHERE 
-s1.score <= s2.score
-GROUP BY
-s1.id, s1.score
-ORDER BY 
-s1.score DESC;
+-- SELECT s1.score, COUNT(*) as 'rank'
+-- FROM Scores as s1 JOIN 
+-- (SELECT DISTINCT score FROM Scores ) 
+-- as s2
+-- WHERE 
+-- s1.score <= s2.score
+-- GROUP BY
+-- s1.id, s1.score
+-- ORDER BY 
+-- s1.score DESC;
+
+-- SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) FROM Scores ;
+
+SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) FROM Scores;
+
+-- SELECT DISTINCT score FROM Scores ORDER BY score DESC;
