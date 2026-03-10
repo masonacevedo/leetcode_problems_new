@@ -13,5 +13,10 @@ insert into Activity (player_id, device_id, event_date, games_played) values ('2
 insert into Activity (player_id, device_id, event_date, games_played) values ('3', '1', '2016-03-02', '0');
 insert into Activity (player_id, device_id, event_date, games_played) values ('3', '4', '2018-07-03', '5');
 
-select player_id, MIN(event_date) as first_login from Activity
-GROUP BY player_id;
+SELECT player_id, device_id 
+FROM Activity 
+WHERE (player_id, event_date) IN 
+(
+    SELECT player_id, MIN(event_date) AS first_login FROM Activity
+    GROUP BY player_id
+);
