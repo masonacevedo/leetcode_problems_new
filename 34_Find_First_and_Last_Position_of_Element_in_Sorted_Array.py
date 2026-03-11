@@ -15,7 +15,6 @@ class Solution:
             return [0,0]
         elif knownIndex == len(nums) - 1:
             return [len(nums)-1, len(nums)-1]
-        # print("knownIndex:", knownIndex)
         lowerHalf = specialSearch(nums[0:knownIndex], target, "lower")
         upperHalf = specialSearch(nums[knownIndex:], target, "upper")
         return [lowerHalf, knownIndex + upperHalf]
@@ -35,18 +34,11 @@ def specialSearch(nums, target, upperOrLower):
         guess = nums[middleIndex]
 
         if upperOrLower == "upper":
-            # print("middleIndex:", middleIndex)
-            # print("guess:", guess)
-            # print()
             if guess == target:
                 lowerBound = middleIndex
             else:
                 upperBound = middleIndex
         else:
-            # print("uppe")
-            # print("middleIndex:", middleIndex)
-            # print("guess:", guess)
-            # print()
             if guess == target:
                 upperBound = middleIndex
             else:
@@ -59,7 +51,6 @@ def specialSearch(nums, target, upperOrLower):
 
 
 def normalSearch(nums, target):
-    # print("nums:", nums)
     if len(nums) == 0:
         return -1
     elif len(nums) == 1:
