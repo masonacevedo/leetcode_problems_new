@@ -8,22 +8,13 @@ INSERT INTO Scores (score) VALUES (3.85);
 INSERT INTO Scores (score) VALUES (4.00);
 INSERT INTO Scores (score) VALUES (3.65);
 
-
--- SELECT s1.score, COUNT(*) as 'rank'
--- FROM Scores as s1 JOIN 
--- (SELECT DISTINCT score FROM Scores ) 
--- as s2
--- WHERE 
--- s1.score <= s2.score
--- GROUP BY
--- s1.id, s1.score
--- ORDER BY 
--- s1.score DESC;
-
--- SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) FROM Scores ;
-
-SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) as "rank" FROM (
+SELECT original.score, rankedTable.rank
+FROM
+Scores as original JOIN
+(SELECT score, ROW_NUMBER() OVER (ORDER BY score DESC) as "rank" FROM (
     SELECT DISTINCT score FROM Scores ORDER BY score DESC
-) as ranked;
-
--- SELECT DISTINCT score FROM Scores ORDER BY score DESC;
+) as ranked) as rankedTable
+ON
+original.score = rankedTable.score
+ORDER BY
+rankedTable.rank ASC;
