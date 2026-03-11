@@ -13,7 +13,9 @@ insert into Activity (player_id, device_id, event_date, games_played) values ('1
 insert into Activity (player_id, device_id, event_date, games_played) values ('3', '1', '2016-03-02', '0');
 insert into Activity (player_id, device_id, event_date, games_played) values ('3', '4', '2018-07-03', '5');
 
-
-SELECT player_id, event_date, sum(games_played)
-FROM Activity
-GROUP BY player_id, event_date;
+SELECT player_id, event_date, SUM(games_table.games_played) OVER (PARTITION BY player_id ORDER BY event_date) AS games_played_so_far
+FROM (
+    SELECT player_id, event_date, sum(games_played) as games_played
+    FROM Activity
+    GROUP BY player_id, event_date
+) as games_table;
