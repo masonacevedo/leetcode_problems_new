@@ -58,40 +58,46 @@ insert into Department (id, name) values ('2', 'Sales');
 
 
 SELECT
-    *
+    Department.name as Department,
+    Employee.name as Employee,
+    Employee.salary as Salary
 FROM
     Employee
 JOIN
     Department
 ON
-    Employee.departmentId = Department.id;
-
-WITH allSalaries AS (
-    SELECT DISTINCT
-        Department.name as DepartmentName,
-        Employee.salary as EmployeeSalary
-    FROM 
-        Employee
-    JOIN
-        Department
-    ON
-        Employee.departmentId = Department.id
-),
-rankedSalaries AS (
-    SELECT 
-        allSalaries.DepartmentName as DepartmentName,
-        allSalaries.EmployeeSalary as EmployeeSalary,
-        ROW_NUMBER() OVER (
-            PARTITION BY 
-                allSalaries.DepartmentName 
-            ORDER BY 
-                allSalaries.EmployeeSalary DESC)
-        AS salaryRank
-    FROM 
-        allSalaries
-)
-SELECT DepartmentName, EmployeeSalary
-FROM 
-    rankedSalaries
+    Employee.departmentId = Department.id
 WHERE
-    salaryRank in (1,2,3);
+    (Department.name, Employee.salary) IN (
+
+        WITH allSalaries AS (
+            SELECT DISTINCT
+                Department.name as DepartmentName,
+                Employee.salary as EmployeeSalary
+            FROM 
+                Employee
+            JOIN
+                Department
+            ON
+                Employee.departmentId = Department.id
+        ),
+        rankedSalaries AS (
+            SELECT 
+                allSalaries.DepartmentName as DepartmentName,
+                allSalaries.EmployeeSalary as EmployeeSalary,
+                ROW_NUMBER() OVER (
+                    PARTITION BY 
+                        allSalaries.DepartmentName 
+                    ORDER BY 
+                        allSalaries.EmployeeSalary DESC)
+                AS salaryRank
+            FROM 
+                allSalaries
+        )
+        SELECT DepartmentName, EmployeeSalary
+        FROM 
+            rankedSalaries
+        WHERE
+            salaryRank in (1,2,3)
+
+    );
