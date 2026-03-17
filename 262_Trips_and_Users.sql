@@ -25,32 +25,25 @@ insert into Users (users_id, banned, role) values ('13', 'No', 'driver');
 
 
 -- Trips that were cancelled by someone not banned
-WITH bannedIds AS 
-    (
-        SELECT users_id FROM Users WHERE banned="Yes"
-    ), 
-cancelledTrips AS 
-    (SELECT DISTINCT 
+WITH bannedIds AS (
+    SELECT users_id FROM Users WHERE banned="Yes"
+),
+cancelledTrips AS (
+    SELECT 
         Trips.id AS tripID,
         Trips.request_at AS requestDate
     FROM
         Trips
     WHERE
-        request_at >= "2013-10-01" AND request_at <= "2013-10-03"
-        AND (
-            status = "cancelled_by_driver" OR status = "cancelled_by_client")
-        AND (
-            Trips.client_id NOT IN (SELECT users_id FROM bannedIds)
-        )
-    ), 
+        (status = "cancelled_by_driver" OR status = "cancelled_by_client")
+        AND 
+        (Trips.client_id NOT IN (SELECT users_id FROM bannedIds))
+),
 -- All trips between requested dates
 allTrips AS (
-    SELECT DISTINCT 
-        -- Trips.id AS tripID
-        -- Trips.request_at AS requestDate
-        Trips.id as tripId,
-        Trips.request_at as request_at
-        -- *
+    SELECT  
+        Trips.id AS tripId,
+        Trips.request_at AS request_at
     FROM
         Trips
     WHERE
@@ -61,19 +54,19 @@ allTrips AS (
         trips.driver_id NOT IN (
             SELECT users_id FROM bannedIds
         )
-    ),
+),
 -- number of cancelled trips on each day
 cancellationsByDate AS ( 
     SELECT DISTINCT
         requestDate, 
-        COUNT(*) OVER (PARTITION BY requestDate) as cancellationCount
+        COUNT(*) OVER (PARTITION BY requestDate) AS cancellationCount
     FROM 
         cancelledTrips),
 -- number of trips on each day
 tripsByDate AS (
     SELECT
         request_at,
-        COUNT(tripId) as tripCount
+        COUNT(tripId) AS tripCount
     FROM
         allTrips
     GROUP BY 
@@ -81,13 +74,13 @@ tripsByDate AS (
 )
 -- cancellation rate!
 SELECT 
-    tripsByDate.request_at as Day,
-    -- cancellationCount,
-    -- tripCount,
-    ROUND(COALESCE(cancellationCount/tripCount, 0),2) as "Cancellation Rate"
+    tripsByDate.request_at AS Day,
+    ROUND(COALESCE(cancellationCount/tripCount, 0),2) AS "Cancellation Rate"
 FROM 
     tripsByDate
 LEFT JOIN
     cancellationsByDate
 ON
-    tripsByDate.request_at = cancellationsByDate.requestDate;
+    tripsByDate.request_at = cancellationsByDate.requestDate
+WHERE
+    tripsByDate.request_at >= "2013-10-01" AND tripsByDate.request_at <= "2013-10-03";
