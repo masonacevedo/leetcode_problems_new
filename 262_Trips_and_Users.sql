@@ -55,21 +55,11 @@ allTrips AS (
         Trips
     WHERE
         trips.client_id NOT IN (
-            SELECT 
-                users_id 
-            FROM 
-                Users
-            WHERE 
-                banned = "Yes"
+            SELECT users_id FROM bannedIds
         )
         AND
         trips.driver_id NOT IN (
-            SELECT 
-                users_id 
-            FROM 
-                Users
-            WHERE 
-                banned = "Yes"
+            SELECT users_id FROM bannedIds
         )
     ),
 -- number of cancelled trips on each day
@@ -92,9 +82,9 @@ tripsByDate AS (
 -- cancellation rate!
 SELECT 
     tripsByDate.request_at as Day,
-    cancellationCount, 
-    tripCount,
-    COALESCE(cancellationCount/tripCount, 0) as "Cancellation Rate"
+    -- cancellationCount,
+    -- tripCount,
+    ROUND(COALESCE(cancellationCount/tripCount, 0),2) as "Cancellation Rate"
 FROM 
     tripsByDate
 LEFT JOIN
