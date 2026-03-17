@@ -42,7 +42,7 @@ WITH cancelledTrips AS
         AND (status = "cancelled_by_driver" OR status = "cancelled_by_client")
         AND banned = "No"),
 
--- Trips between the requested dates
+-- All trips between requested dates
 allTrips AS (
     SELECT DISTINCT 
         Trips.id AS tripID,
@@ -57,24 +57,29 @@ allTrips AS (
         (Users.users_id = Trips.driver_id AND Users.role = "driver")
     WHERE
         request_at >= "2013-10-01" AND request_at <= "2013-10-03"),
+-- number of cancelled trips on each day
 cancellationsByDate AS ( 
     SELECT DISTINCT
         requestDate, 
         COUNT(*) OVER (PARTITION BY requestDate) as cancellationCount
     FROM 
-        cancelledTrips)
+        cancelledTrips),
+tripsByDate AS (
+    SELECT
+        request_at,
+        COUNT(trips.id) as tripCount
+    FROM
+        trips
+    GROUP BY 
+        request_at
+)
+-- number of trips on each day
 SELECT 
-    * 
-FROM
-    cancellationsByDate;
-
--- allTripsCountTable AS (
---     SELECT COUNT(*) as allTripsNum FROM allTrips
--- )
-
-
--- SELECT cancelledTripsNum/allTripsNum 
--- FROM
---     cancelledTripCountTable
--- JOIN
---     allTripsCountTable;
+    tripsByDate.request_at as Day,
+    COALESCE(cancellationCount/tripCount, 0) as "Cancellation Rate"
+FROM 
+    tripsByDate
+LEFT JOIN
+    cancellationsByDate
+ON
+    tripsByDate.request_at = cancellationsByDate.requestDate;
