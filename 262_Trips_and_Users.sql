@@ -26,7 +26,12 @@ insert into Users (users_id, banned, role) values ('13', 'No', 'driver');
 
 -- Trips that were cancelled by someone not banned
 WITH bannedIds AS (
-    SELECT users_id FROM Users WHERE banned="Yes"
+    SELECT 
+        users_id 
+    FROM 
+        Users 
+    WHERE 
+        banned="Yes"
 ),
 cancelledTrips AS (
     SELECT 
