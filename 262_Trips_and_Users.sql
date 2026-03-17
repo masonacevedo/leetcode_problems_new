@@ -43,6 +43,8 @@ cancelledTrips AS (
         (status = "cancelled_by_driver" OR status = "cancelled_by_client")
         AND 
         (Trips.client_id NOT IN (SELECT users_id FROM bannedIds))
+        AND
+        (Trips.driver_id NOT IN (SELECT users_id FROM bannedIds))
 ),
 -- All trips between requested dates
 allTrips AS (
