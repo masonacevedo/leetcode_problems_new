@@ -26,15 +26,15 @@ insert into Users (users_id, banned, role) values ('13', 'No', 'driver');
 
 -- Trips that were cancelled by someone not banned
 WITH bannedIds AS (
-    SELECT 
-        users_id 
-    FROM 
-        Users 
-    WHERE 
+    SELECT
+        users_id
+    FROM
+        Users
+    WHERE
         banned="Yes"
 ),
 cancelledTrips AS (
-    SELECT 
+    SELECT
         Trips.id AS tripID,
         Trips.request_at AS requestDate
     FROM
@@ -48,7 +48,7 @@ cancelledTrips AS (
 ),
 -- All trips between requested dates
 allTrips AS (
-    SELECT  
+    SELECT
         Trips.id AS tripId,
         Trips.request_at AS request_at
     FROM
@@ -80,10 +80,10 @@ tripsByDate AS (
         request_at
 )
 -- cancellation rate!
-SELECT 
+SELECT
     tripsByDate.request_at AS Day,
     ROUND(COALESCE(cancellationCount/tripCount, 0),2) AS "Cancellation Rate"
-FROM 
+FROM
     tripsByDate
 LEFT JOIN
     cancellationsByDate
