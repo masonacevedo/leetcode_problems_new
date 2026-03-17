@@ -39,7 +39,7 @@ WITH cancelledTrips AS
         (Users.users_id = Trips.driver_id AND Users.role = "driver")
     WHERE
         request_at >= "2013-10-01" AND request_at <= "2013-10-03"
-        AND status = "cancelled_by_driver"
+        AND (status = "cancelled_by_driver" OR status = "cancelled_by_client")
         AND banned = "No"),
 
 -- Trips between the requested dates
@@ -56,16 +56,25 @@ allTrips AS (
         OR 
         (Users.users_id = Trips.driver_id AND Users.role = "driver")
     WHERE
-        request_at >= "2013-10-01" AND request_at <= "2013-10-03"), 
-cancelledTripCountTable AS (
-    SELECT COUNT(*) as cancelledTripsNum FROM cancelledTrips
-), 
-allTripsCountTable AS (
-    SELECT COUNT(*) as allTripsNum FROM allTrips
-)
-
-SELECT cancelledTripsNum/allTripsNum 
+        request_at >= "2013-10-01" AND request_at <= "2013-10-03"),
+cancellationsByDate AS ( 
+    SELECT DISTINCT
+        requestDate, 
+        COUNT(*) OVER (PARTITION BY requestDate) as cancellationCount
+    FROM 
+        cancelledTrips)
+SELECT 
+    * 
 FROM
-    cancelledTripCountTable
-JOIN
-    allTripsCountTable;
+    cancellationsByDate;
+
+-- allTripsCountTable AS (
+--     SELECT COUNT(*) as allTripsNum FROM allTrips
+-- )
+
+
+-- SELECT cancelledTripsNum/allTripsNum 
+-- FROM
+--     cancelledTripCountTable
+-- JOIN
+--     allTripsCountTable;
