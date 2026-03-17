@@ -64,6 +64,7 @@ cancellationsByDate AS (
         COUNT(*) OVER (PARTITION BY requestDate) as cancellationCount
     FROM 
         cancelledTrips),
+-- number of trips on each day
 tripsByDate AS (
     SELECT
         request_at,
@@ -73,7 +74,7 @@ tripsByDate AS (
     GROUP BY 
         request_at
 )
--- number of trips on each day
+-- cancellation rate!
 SELECT 
     tripsByDate.request_at as Day,
     COALESCE(cancellationCount/tripCount, 0) as "Cancellation Rate"
