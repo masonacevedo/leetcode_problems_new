@@ -25,22 +25,24 @@ insert into Users (users_id, banned, role) values ('13', 'No', 'driver');
 
 
 -- Trips that were cancelled by someone not banned
-WITH cancelledTrips AS 
+WITH bannedIds AS 
+    (
+        SELECT users_id FROM Users WHERE banned="Yes"
+    ), 
+cancelledTrips AS 
     (SELECT DISTINCT 
         Trips.id AS tripID,
         Trips.request_at AS requestDate
     FROM
         Trips
-    JOIN
-        Users
-    ON
-        (Users.users_id = Trips.client_id AND Users.role = "client")
-        OR 
-        (Users.users_id = Trips.driver_id AND Users.role = "driver")
     WHERE
         request_at >= "2013-10-01" AND request_at <= "2013-10-03"
-        AND (status = "cancelled_by_driver" OR status = "cancelled_by_client")
-        AND banned = "No"),
+        AND (
+            status = "cancelled_by_driver" OR status = "cancelled_by_client")
+        AND (
+            Trips.client_id NOT IN (SELECT users_id FROM bannedIds)
+        )
+    ), 
 -- All trips between requested dates
 allTrips AS (
     SELECT DISTINCT 
