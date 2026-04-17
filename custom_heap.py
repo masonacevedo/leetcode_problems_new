@@ -1,3 +1,5 @@
+import math
+
 # Recall: 
 # A heap is a tree data structure
 # where every node is larger than it's left neighbor
@@ -15,12 +17,72 @@
 #   the tip. If it's bigger, we know it goes in the right tree.
 #   if it's smaller, we know it goes in the left tree. 
 class MinHeap:
-    def __init__(self, priorities_and_items):
-        pass
+    def __init__(self, items):
+        self.vals = []
+        for item in items:
+            self.push(item)
 
-    def push(self, priority, item):
-        pass
+    def push(self, item):
+        self.vals.append(item)
+        self.__percolate_up__()
     
     def pop(self):
         pass
-    
+
+    def __percolate_up__(self):
+        i = len(self.vals)-1
+
+        current_entry = self.vals[i]
+        parent_entry = self.vals[math.floor((i-1)/2)]
+        while parent_entry > current_entry and i != 0:
+
+
+            self.vals[i] = parent_entry
+            self.vals[math.floor((i-1)/2)] = current_entry
+
+
+            i = math.floor((i-1)/2)
+            current_entry = self.vals[i]
+            parent_entry = self.vals[math.floor((i-1)/2)]
+
+    def __repr__(self):
+        return str(self.vals)
+
+
+h = MinHeap([])
+print(h)
+print()
+
+
+h.push(5)
+print(h)
+print()
+
+h.push(4)
+print(h)
+print()
+
+h.push(3)
+print(h)
+
+h.push(2)
+print(h)
+
+h.push(1)
+print(h)
+h.push(2.5)
+print(h)
+
+import random
+
+
+for i in range(0, 50):
+    h.push(random.randint(1,1000))
+
+for i in reversed(range(1, len(h.vals))):
+    parent_i = math.floor((i-1)/2)
+
+    entry = h.vals[i]
+    parent_entry = h.vals[parent_i]
+    assert(entry >= parent_entry)
+
