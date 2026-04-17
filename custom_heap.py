@@ -27,7 +27,72 @@ class MinHeap:
         self.__percolate_up__()
     
     def pop(self):
-        pass
+        if len(self.vals) <= 2:
+            ans = self.vals[0]
+            del self.vals[0]
+            return ans
+
+        ans = self.vals[0]
+        last_item = self.vals[-1]
+        self.vals[0] = last_item
+        i = 0
+        current_entry = self.vals[i]
+        left_child = self.vals[(2*i)+1]
+        right_child = self.vals[(2*i)+2]
+        
+
+        while ((current_entry > left_child) or (current_entry > right_child)) \
+            and (self.__left_child_in_tree__(i)) and (self.__right_child_in_tree(i)): 
+
+            current_entry = self.vals[i]
+            left_child = self.vals[(2*i)+1]
+            right_child = self.vals[(2*i)+2]
+
+            if left_child < right_child:
+                lesser_child = left_child
+                temp = self.vals[i]
+                self.vals[i] = self.vals[(2*i)+1]
+                self.vals[(2*i)+1] = temp
+                i = (2*i)+1
+            else:
+                lesser_child = right_child
+                temp = self.vals[i]
+                self.vals[i] = self.vals[(2*i)+2]
+                self.vals[(2*i)+2] = temp
+                i = (2*i)+2
+            # print("i:", i)
+            # print("2*i+1:", (2*i)+1)
+            # print("left  child in tree:", self.__left_child_in_tree__(i))
+            # print("right child in tree:", self.__right_child_in_tree(i))
+            
+            # input("enter to continue")
+
+        # if we exited the loop because the heap
+        # condition is satisfied, we're done.
+        # if we exited the loop because the current
+        # entry has no children, we're done. 
+        
+        # if we exited the loop because the left child exists but the right child does not exist, we need 
+        # to potentially swap those.
+        if (self.__left_child_in_tree__(i)) and not(self.__right_child_in_tree(i)):
+            current_entry = self.vals[i]
+            child_entry = self.vals[(2*i)+1]
+            if current_entry > child_entry:
+                self.vals[(2*i)+1] = current_entry
+                self.vals[i] = child_entry
+        
+        del self.vals[-1]
+
+        return ans
+    
+    def __left_child_in_tree__(self, i):
+        left_child_index = (2*i)+1
+        return left_child_index < len(self.vals) 
+
+    def __right_child_in_tree(self, i):
+        right_child_index = (2*i)+2
+        return right_child_index < len(self.vals) 
+
 
     def __percolate_up__(self):
         i = len(self.vals)-1
@@ -50,39 +115,62 @@ class MinHeap:
 
 
 h = MinHeap([])
-print(h)
-print()
+# print(h)
+# print()
 
 
 h.push(5)
-print(h)
-print()
+# print(h)
+# print()
 
 h.push(4)
-print(h)
-print()
+# print(h)
+# print()
 
 h.push(3)
-print(h)
+# print(h)
 
 h.push(2)
-print(h)
+# print(h)
 
 h.push(1)
-print(h)
+# print(h)
 h.push(2.5)
-print(h)
+# print(h)
 
-import random
+print("before:", h)
+smallest = h.pop()
+print("after: ", h)
+print()
+print("before:", h)
+smallest = h.pop()
+print("after: ", h)
+print()
+print("before:", h)
+smallest = h.pop()
+print("after: ", h)
+print()
+print("before:", h)
+smallest = h.pop()
+print("after: ", h)
+print("before:", h)
+smallest = h.pop()
+print("after: ", h)
+print()
+print("before:", h)
+smallest = h.pop()
+print("after: ", h)
+
+# import random
 
 
-for i in range(0, 50):
-    h.push(random.randint(1,1000))
+# for i in range(0, 50):
+#     h.push(random.randint(1,1000))
 
-for i in reversed(range(1, len(h.vals))):
-    parent_i = math.floor((i-1)/2)
+# for i in reversed(range(1, len(h.vals))):
+#     parent_i = math.floor((i-1)/2)
 
-    entry = h.vals[i]
-    parent_entry = h.vals[parent_i]
-    assert(entry >= parent_entry)
+#     entry = h.vals[i]
+#     parent_entry = h.vals[parent_i]
+#     assert(entry >= parent_entry)
 
