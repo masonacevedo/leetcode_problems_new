@@ -26,72 +26,72 @@ class MinHeap:
         self.vals.append(item)
         self.__percolate_up__()
     
+    def __heap_property_satisfied__(self):
+        for i in reversed(range(1, len(self.vals))):
+            parent_i = math.floor((i-1)/2)
+            entry = h.vals[i]
+            parent_entry = h.vals[parent_i]
+            assert(entry >= parent_entry)
+
+
     def pop(self):
+
         if len(self.vals) <= 2:
             ans = self.vals[0]
             del self.vals[0]
             return ans
 
+
         ans = self.vals[0]
         last_item = self.vals[-1]
         self.vals[0] = last_item
+
         i = 0
         current_entry = self.vals[i]
         left_child = self.vals[(2*i)+1]
         right_child = self.vals[(2*i)+2]
-        
+
 
         while ((current_entry > left_child) or (current_entry > right_child)) \
-            and (self.__left_child_in_tree__(i)) and (self.__right_child_in_tree(i)): 
+            and (self.__left_child_in_tree__(i)) and (self.__right_child_in_tree(i)):
 
             current_entry = self.vals[i]
             left_child = self.vals[(2*i)+1]
             right_child = self.vals[(2*i)+2]
 
-            if left_child < right_child:
-                lesser_child = left_child
-                temp = self.vals[i]
-                self.vals[i] = self.vals[(2*i)+1]
-                self.vals[(2*i)+1] = temp
-                i = (2*i)+1
+            if current_entry > left_child or current_entry > right_child:
+                if left_child < right_child:
+                    temp = self.vals[i]
+                    self.vals[i] = self.vals[(2*i)+1]
+                    self.vals[(2*i)+1] = temp
+                    i = (2*i)+1
+                else:
+                    temp = self.vals[i]
+                    self.vals[i] = self.vals[(2*i)+2]
+                    self.vals[(2*i)+2] = temp
+                    i = (2*i)+2
             else:
-                lesser_child = right_child
-                temp = self.vals[i]
-                self.vals[i] = self.vals[(2*i)+2]
-                self.vals[(2*i)+2] = temp
-                i = (2*i)+2
-            # print("i:", i)
-            # print("2*i+1:", (2*i)+1)
-            # print("left  child in tree:", self.__left_child_in_tree__(i))
-            # print("right child in tree:", self.__right_child_in_tree(i))
-            
-            # input("enter to continue")
+                break
 
-        # if we exited the loop because the heap
-        # condition is satisfied, we're done.
-        # if we exited the loop because the current
-        # entry has no children, we're done. 
+
         
-        # if we exited the loop because the left child exists but the right child does not exist, we need 
-        # to potentially swap those.
         if (self.__left_child_in_tree__(i)) and not(self.__right_child_in_tree(i)):
             current_entry = self.vals[i]
             child_entry = self.vals[(2*i)+1]
             if current_entry > child_entry:
                 self.vals[(2*i)+1] = current_entry
                 self.vals[i] = child_entry
-        
         del self.vals[-1]
-
+        self.__heap_property_satisfied__()
         return ans
     
     def __left_child_in_tree__(self, i):
         left_child_index = (2*i)+1
-        return left_child_index < len(self.vals) 
+        return left_child_index < len(self.vals)
 
     def __right_child_in_tree(self, i):
         right_child_index = (2*i)+2
-        return right_child_index < len(self.vals) 
+        return right_child_index < len(self.vals)
 
 
     def __percolate_up__(self):
@@ -113,64 +113,28 @@ class MinHeap:
     def __repr__(self):
         return str(self.vals)
 
+    def __len__(self):
+        return len(self.vals)
 
 h = MinHeap([])
-# print(h)
-# print()
 
+import random
 
-h.push(5)
-# print(h)
-# print()
+random.seed(42)
 
-h.push(4)
-# print(h)
-# print()
+for i in range(0, 30):
+    h.push(random.randint(1,1000))
 
-h.push(3)
-# print(h)
+for i in reversed(range(1, len(h.vals))):
+    parent_i = math.floor((i-1)/2)
 
-h.push(2)
-# print(h)
+    entry = h.vals[i]
+    parent_entry = h.vals[parent_i]
+    assert(entry >= parent_entry)
 
-h.push(1)
-# print(h)
-h.push(2.5)
-# print(h)
+normal_sorted = sorted(h.vals)
+heap_sorted = []
+while len(h) > 0:
+    heap_sorted.append(h.pop())
 
-print("before:", h)
-smallest = h.pop()
-print("after: ", h)
-print()
-print("before:", h)
-smallest = h.pop()
-print("after: ", h)
-print()
-print("before:", h)
-smallest = h.pop()
-print("after: ", h)
-print()
-print("before:", h)
-smallest = h.pop()
-print("after: ", h)
-print("before:", h)
-smallest = h.pop()
-print("after: ", h)
-print()
-print("before:", h)
-smallest = h.pop()
-print("after: ", h)
-
-# import random
-
-
-# for i in range(0, 50):
-#     h.push(random.randint(1,1000))
-
-# for i in reversed(range(1, len(h.vals))):
-#     parent_i = math.floor((i-1)/2)
-
-#     entry = h.vals[i]
-#     parent_entry = h.vals[parent_i]
-#     assert(entry >= parent_entry)
-
+assert(heap_sorted == normal_sorted)
