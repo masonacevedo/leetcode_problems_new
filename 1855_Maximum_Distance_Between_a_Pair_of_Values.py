@@ -12,11 +12,11 @@ class Solution:
             num2 = nums2[right]
             num1 = nums1[left]
 
-            print("left: ", left)
-            print("right:", right)
-            print("num1:", num1)
-            print("num2:", num2)
-            input()
+            # print("left: ", left)
+            # print("right:", right)
+            # print("num1:", num1)
+            # print("num2:", num2)
+            # input()
 
             if num1 <= num2:
                 return right - left
@@ -25,14 +25,23 @@ class Solution:
                 return 0
             
             else:
-
-                num2Neighbor = nums2[right - 1]
-                num1Neighbor = nums1[left + 1]
-
-                if abs(num2 - num2Neighbor) > abs(num1 - num1Neighbor):
+                # this logic is for choosing which counter to increment/decrement.
+                # however, if we're at the end of either list, we have no choice in
+                # the matter! 
+                if (right == 0) and (left == len(nums1)-1):
+                    return 0
+                elif (right == 0):
+                    left += 1
+                elif (left == len(nums1) - 1):
                     right -= 1
                 else:
-                    left += 1
+                    num2Neighbor = nums2[right - 1]
+                    num1Neighbor = nums1[left + 1]
+
+                    if abs(num2 - num2Neighbor) > abs(num1 - num1Neighbor):
+                        right -= 1
+                    else:
+                        left += 1
         
         return 0
 
