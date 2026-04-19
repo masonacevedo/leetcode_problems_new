@@ -2,59 +2,36 @@ from typing import List
 
 class Solution:
     def maxDistance(self, nums1: List[int], nums2: List[int]) -> int:
-        right = len(nums2)-1
+        right = 0
         left = 0
 
-        while (right >= 0) and (left < len(nums1)):
+        best_so_far = 0
 
-            
-            
-            num2 = nums2[right]
+        while left < len(nums1) and right < len(nums2):
             num1 = nums1[left]
-
-            # print("left: ", left)
-            # print("right:", right)
-            # print("num1:", num1)
-            # print("num2:", num2)
-            # input()
+            num2 = nums2[right]
 
             if num1 <= num2:
-                return right - left
-            
-            elif right == left:
-                return 0
-            
-            else:
-                # this logic is for choosing which counter to increment/decrement.
-                # however, if we're at the end of either list, we have no choice in
-                # the matter! 
-                if (right == 0) and (left == len(nums1)-1):
-                    return 0
-                elif (right == 0):
-                    left += 1
-                elif (left == len(nums1) - 1):
-                    right -= 1
-                else:
-                    num2Neighbor = nums2[right - 1]
-                    num1Neighbor = nums1[left + 1]
+                best_so_far = max(best_so_far, right - left)
 
-                    if abs(num2 - num2Neighbor) > abs(num1 - num1Neighbor):
-                        right -= 1
-                    else:
-                        left += 1
-        
-        return 0
+            if num2 >= num1:
+                right += 1
+            else:
+                left += 1
+
+
+        return best_so_far
 
 
 
 s = Solution()
 # nums1 = [55,30,5,4,2]
 # nums2 = [100,20,10,10,5]
-# nums1 = [2, 2, 2]
-# nums2 = [10, 10, 1]
+nums1 = [2, 2, 2]
+nums2 = [10, 10, 1]
 
-nums1 = [30,29,19,5]
-nums2 = [25,25,25,25,25]
+# nums1 = [30,29,19,5]
+# nums2 = [25,25,25,25,25]
 
 ans = s.maxDistance(nums1, nums2)
 print("ans:", ans)
