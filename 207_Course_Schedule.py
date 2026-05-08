@@ -38,14 +38,14 @@ class Solution:
             # print("course:", course)
 
             startingNode = nodeMap[course]
-            print("startingNode:", startingNode)
+            # print("startingNode:", startingNode)
             if detectCycle(startingNode):
-                print("cycle detected!")
+                # print("cycle detected!")
                 return False
             else:
                 pass
                 print("cycle not detected")
-            print()
+            # print()
         
         return True
         
@@ -56,14 +56,16 @@ def detectCycle(startingNode):
 
     while len(queue) > 0:
         currentNode = queue.popleft()
-        print("currentNode:", currentNode)
-        if currentNode.value in seenBefore:
-            return True
+        # print("currentNode:", currentNode)
+        # print("seenBefore:", seenBefore)
+        # if currentNode.value in seenBefore:
+        #     return True
 
         for node in currentNode.neighbors:
+            if (currentNode.value, node.value) in seenBefore:
+                return True
             queue.append(node)
-        
-        seenBefore.add(currentNode.value)
+            seenBefore.add((currentNode.value, node.value))
         
     
     return False
@@ -71,6 +73,8 @@ def detectCycle(startingNode):
 
 numCourses = 5
 prerequisites = [[1,4],[2,4],[3,1],[3,2]]
+# prerequisites = [[1,0],[2,6],[1,7],[6,4],[7,0],[0,5]]
+# prerequisites = [[0,1], [1,0]]
 
 s = Solution()
 ans = s.canFinish(numCourses, prerequisites)
