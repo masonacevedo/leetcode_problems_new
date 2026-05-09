@@ -35,17 +35,16 @@ class Solution:
         
         bestCourseOrdering = []
         exploredAlready = set()
+        items = []
         for course in nodeMap.keys():
             
             startingNode = nodeMap[course]
-            items = []
             result = topologicalSort(startingNode, set(), exploredAlready, items)
-            if result:
-                bestCourseOrdering += result
-            elif result == False:
+            
+            if not(result):
                 return []
 
-        return list(reversed(bestCourseOrdering))        
+        return list(reversed(items))        
 
 def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
     
@@ -53,7 +52,7 @@ def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
         return False
     
     if startingNode.value in exploredAlready:
-        return items
+        return True
     
     onCurrentPath.add(startingNode.value)
 
@@ -66,7 +65,7 @@ def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
     exploredAlready.add(startingNode.value)
 
     items.append(startingNode.value)
-    return items
+    return True
 
 
 
