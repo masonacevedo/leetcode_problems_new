@@ -33,21 +33,27 @@ class Solution:
 
             fromNode.neighbors.append(toNode)
         
-        for k, v in nodeMap.items():
-            print(k, "|", v)
+        # for k, v in nodeMap.items():
+        #     print(k, "|", v)
         
 
         bestCourseOrdering = []
+        exploredAlready = set()
         for course in nodeMap.keys():
             
             startingNode = nodeMap[course]
             items = []
-            result = topologicalSort(startingNode, set(), set(), items)
-            print("result:", result)
-            print("bestCourseOrdering:", bestCourseOrdering)
+            result = topologicalSort(startingNode, set(), exploredAlready, items)
+            bestCourseOrdering += result
+            # print("result:", result)
+            # print("bestCourseOrdering:", bestCourseOrdering)
             if result:
                 if len(result) > len(bestCourseOrdering):
                     bestCourseOrdering = result
+            elif result == False:
+                # print("returning empty array")
+                return []
+            # input("enter to continue")
 
         return list(reversed(bestCourseOrdering))        
 
@@ -90,6 +96,15 @@ prerequisites = [
     [3,1],
 
 ]
+
+# prerequisites = [
+#     [0,2],
+#     [1,2],
+#     [2,3],
+#     [2,4],
+#     [3,5],
+#     [4,6],
+# ]
 s = Solution()
 ans = s.findOrder(numCourses, prerequisites)
 print("ans:", ans)
