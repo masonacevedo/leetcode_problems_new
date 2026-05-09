@@ -39,35 +39,38 @@ class Solution:
 
             startingNode = nodeMap[course]
             # print("startingNode:", startingNode)
-            if detectCycle(startingNode):
+            onCurrentPath = set()
+            visitedBefore = set()
+            if detectCycle(startingNode, onCurrentPath, visitedBefore):
                 # print("cycle detected!")
                 return False
             else:
                 pass
-                print("cycle not detected")
+                # print("cycle not detected")
             # print()
         
         return True
         
         
-def detectCycle(startingNode):
-    queue = deque([startingNode])
-    seenBefore = set()
+def detectCycle(startingNode, onCurrentPath, visitedBefore):
 
-    while len(queue) > 0:
-        currentNode = queue.popleft()
-        # print("currentNode:", currentNode)
-        # print("seenBefore:", seenBefore)
-        # if currentNode.value in seenBefore:
-        #     return True
-
-        for node in currentNode.neighbors:
-            if (currentNode.value, node.value) in seenBefore:
-                return True
-            queue.append(node)
-            seenBefore.add((currentNode.value, node.value))
-        
+    if startingNode.value in visitedBefore:
+        # if we've reached a node that we've already explored - no need to explore it again
+        return False
     
+    if startingNode.value in onCurrentPath:
+        # if a starting node is in the current path, we've found a cycle! 
+        return True
+    
+    onCurrentPath.add(startingNode.value)
+
+    for neighbor in startingNode.neighbors:
+        if detectCycle(neighbor, onCurrentPath, visitedBefore):
+            return True
+    
+    onCurrentPath.remove(startingNode.value)
+    visitedBefore.add(startingNode.value)
+
     return False
         
 
