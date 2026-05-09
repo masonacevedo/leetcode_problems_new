@@ -4,10 +4,6 @@ class Node:
     def __init__(self, value, neighbors=None):
         self.value = value
         self.neighbors = [] if neighbors is None else neighbors
-        # if neighbors is None:
-        #     self.neighbors = []
-        # else:
-        #     self.neighbors = neighbors
     
     def __repr__(self):
         ans = str(self.value)
@@ -19,12 +15,12 @@ class Node:
 
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        
+
         nodeMap = {}
         for i in range(0, numCourses):
             newNode = Node(value = i)
             nodeMap[i] = newNode
-        
+
         for pair in prerequisites:
             fromNodeVal, toNodeVal = pair
 
@@ -32,39 +28,37 @@ class Solution:
             toNode = nodeMap[toNodeVal]
 
             fromNode.neighbors.append(toNode)
-        
-        bestCourseOrdering = []
+
         exploredAlready = set()
         items = []
         for course in nodeMap.keys():
-            
+
             startingNode = nodeMap[course]
             result = topologicalSort(startingNode, set(), exploredAlready, items)
-            
+
             if not(result):
                 return []
 
         return items
 
 def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
-    
+
     if startingNode.value in onCurrentPath:
         return False
-    
+
     if startingNode.value in exploredAlready:
         return True
-    
-    onCurrentPath.add(startingNode.value)
 
+    onCurrentPath.add(startingNode.value)
 
     for neighbor in startingNode.neighbors:
         if topologicalSort(neighbor, onCurrentPath, exploredAlready, items) == False:
             return False
-    
+
     onCurrentPath.remove(startingNode.value)
     exploredAlready.add(startingNode.value)
-
     items.append(startingNode.value)
+
     return True
 
 
