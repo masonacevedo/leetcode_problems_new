@@ -33,10 +33,6 @@ class Solution:
 
             fromNode.neighbors.append(toNode)
         
-        # for k, v in nodeMap.items():
-        #     print(k, "|", v)
-        
-
         bestCourseOrdering = []
         exploredAlready = set()
         for course in nodeMap.keys():
@@ -44,32 +40,19 @@ class Solution:
             startingNode = nodeMap[course]
             items = []
             result = topologicalSort(startingNode, set(), exploredAlready, items)
-            # print("result:", result)
-
-            # print("result:", result)
-            # print("bestCourseOrdering:", bestCourseOrdering)
             if result:
                 bestCourseOrdering += result
-                # if len(result) > len(bestCourseOrdering):
-                #     bestCourseOrdering = result
             elif result == False:
-                # print("returning empty array")
                 return []
-            # input("enter to continue")
 
         return list(reversed(bestCourseOrdering))        
 
 def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
     
-    # print('startingNode:', startingNode)
-    # print("onCurrentPath:", onCurrentPath)
-    # print()
     if startingNode.value in onCurrentPath:
-        # print("found a cycle!")
         return False
     
     if startingNode.value in exploredAlready:
-        # print("getting here!!")
         return items
     
     onCurrentPath.add(startingNode.value)
@@ -77,15 +60,12 @@ def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
 
     for neighbor in startingNode.neighbors:
         if topologicalSort(neighbor, onCurrentPath, exploredAlready, items) == False:
-            # print("found a cycle!")
             return False
     
     onCurrentPath.remove(startingNode.value)
     exploredAlready.add(startingNode.value)
 
     items.append(startingNode.value)
-    # print("returning:", items)
-
     return items
 
 
