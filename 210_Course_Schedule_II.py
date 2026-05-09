@@ -26,7 +26,7 @@ class Solution:
             nodeMap[i] = newNode
         
         for pair in prerequisites:
-            toNodeVal, fromNodeVal = pair
+            fromNodeVal, toNodeVal = pair
 
             fromNode = nodeMap[fromNodeVal]
             toNode = nodeMap[toNodeVal]
@@ -44,7 +44,7 @@ class Solution:
             if not(result):
                 return []
 
-        return list(reversed(items))        
+        return items
 
 def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
     
@@ -75,23 +75,23 @@ def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
 # prerequisites = [[1,0],[2,0],[3,1],[3,2]]
 numCourses = 7
 # numCourses = 2
-# prerequisites = [
-#     [6,4],
-#     [5,4],
-#     [4,3],
-#     [4,2],
-#     [2,0],
-#     [3,1],
-# ]
-
 prerequisites = [
-    [0,2],
-    [1,2],
-    [2,3],
-    [2,4],
-    [3,5],
-    [4,6],
+    [6,4],
+    [5,4],
+    [4,3],
+    [4,2],
+    [2,0],
+    [3,1],
 ]
+
+# prerequisites = [
+#     [0,2],
+#     [1,2],
+#     [2,3],
+#     [2,4],
+#     [3,5],
+#     [4,6],
+# ]
 
 # prerequisites = [
 #     [0,1],
