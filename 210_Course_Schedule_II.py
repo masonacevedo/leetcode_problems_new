@@ -44,12 +44,14 @@ class Solution:
             startingNode = nodeMap[course]
             items = []
             result = topologicalSort(startingNode, set(), exploredAlready, items)
-            bestCourseOrdering += result
+            # print("result:", result)
+
             # print("result:", result)
             # print("bestCourseOrdering:", bestCourseOrdering)
             if result:
-                if len(result) > len(bestCourseOrdering):
-                    bestCourseOrdering = result
+                bestCourseOrdering += result
+                # if len(result) > len(bestCourseOrdering):
+                #     bestCourseOrdering = result
             elif result == False:
                 # print("returning empty array")
                 return []
@@ -60,7 +62,10 @@ class Solution:
 def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
     
     # print('startingNode:', startingNode)
+    # print("onCurrentPath:", onCurrentPath)
+    # print()
     if startingNode.value in onCurrentPath:
+        # print("found a cycle!")
         return False
     
     if startingNode.value in exploredAlready:
@@ -71,13 +76,16 @@ def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
 
 
     for neighbor in startingNode.neighbors:
-        topologicalSort(neighbor, onCurrentPath, exploredAlready, items)
+        if topologicalSort(neighbor, onCurrentPath, exploredAlready, items) == False:
+            # print("found a cycle!")
+            return False
     
     onCurrentPath.remove(startingNode.value)
     exploredAlready.add(startingNode.value)
 
-
     items.append(startingNode.value)
+    # print("returning:", items)
+
     return items
 
 
@@ -87,24 +95,30 @@ def topologicalSort(startingNode, onCurrentPath, exploredAlready, items):
 # numCourses = 4
 # prerequisites = [[1,0],[2,0],[3,1],[3,2]]
 numCourses = 7
-prerequisites = [
-    [6,4],
-    [5,4],
-    [4,3],
-    [4,2],
-    [2,0],
-    [3,1],
+# numCourses = 2
+# prerequisites = [
+#     [6,4],
+#     [5,4],
+#     [4,3],
+#     [4,2],
+#     [2,0],
+#     [3,1],
+# ]
 
+prerequisites = [
+    [0,2],
+    [1,2],
+    [2,3],
+    [2,4],
+    [3,5],
+    [4,6],
 ]
 
 # prerequisites = [
-#     [0,2],
-#     [1,2],
-#     [2,3],
-#     [2,4],
-#     [3,5],
-#     [4,6],
+#     [0,1],
+#     [1,0]
 # ]
+
 s = Solution()
 ans = s.findOrder(numCourses, prerequisites)
 print("ans:", ans)
