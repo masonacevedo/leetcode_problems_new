@@ -34,40 +34,22 @@ def shortestPath(startNode, endNode, nodeMap):
     for node in nodeMap.values():
         unvisited.append(node)
     heapify(unvisited)
-    print("unvisited heap:", unvisited)
-    print()
     visited = set()
 
     # # while there remain unvisited nodes...
     while len(visited) < len(nodeMap):
-        print("about to pop off heap!")
-        # input("")
         currentNode = heappop(unvisited)
-        print("popped off heap! result:")
-        print("currentNode:", currentNode)
-        # input("")
         
         for pair in currentNode.neighbors:
             neighbor, distance = pair
             distanceThroughCurrentNode = currentNode.bestKnownValue + distance
-            print("making relaxation offer")
-            print("distanceThroughCurrentNode:", distanceThroughCurrentNode)
             if distanceThroughCurrentNode < neighbor.bestKnownValue:
-                print("offer accepted")
                 neighbor.bestKnownValue = distanceThroughCurrentNode
                 heappush(unvisited, neighbor)
-                print("unvisited:", unvisited)
-            else:
-                print("offer rejected")
 
-            # input("")
-            print("\n")
-        
         visited.add(currentNode)
 
-
-    for node in nodeMap.values():
-        print("node:", node)
+    return endNode.bestKnownValue
 
 
 
@@ -91,10 +73,10 @@ for edge in edges:
     node2.neighbors.append((node1, edgeWeight))
     
 
+for node in nodeMap.values():
+    print(node)
+print()
+ans = shortestPath(nodeMap[0], nodeMap[3], nodeMap)
+
 for k,v in nodeMap.items():
     print(k,"|",v)
-
-
-
-ans = shortestPath(nodeMap[0], nodeMap[3], nodeMap)
-print('ans:', ans)
