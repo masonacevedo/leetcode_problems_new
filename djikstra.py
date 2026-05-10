@@ -22,11 +22,6 @@ class Node:
         return self.bestKnownValue < other.bestKnownValue
 
 def shortestPath(startNode, endNode, nodeMap):
-    # idea: first, maintain a dictionary of all the nodes we haven't visited yet.
-    # node 1 starts at a distance away of 0, and all else is infinitely far away. 
-    # Then, iterate through the neighbors: make a relaxation offer to each neighbor.
-    # then, find the unvisited node with the lowest known distance. hop there,
-    # then make relaxation offers from there. 
 
 
     unvisited = []
@@ -34,10 +29,10 @@ def shortestPath(startNode, endNode, nodeMap):
     for node in nodeMap.values():
         unvisited.append(node)
     heapify(unvisited)
-    visited = set()
 
-    # # while there remain unvisited nodes...
-    while len(visited) < len(nodeMap):
+    visitCount = 0
+    n = len(nodeMap)
+    while visitCount < n:
         currentNode = heappop(unvisited)
         
         for pair in currentNode.neighbors:
@@ -47,7 +42,7 @@ def shortestPath(startNode, endNode, nodeMap):
                 neighbor.bestKnownValue = distanceThroughCurrentNode
                 heappush(unvisited, neighbor)
 
-        visited.add(currentNode)
+        visitCount += 1
 
     return endNode.bestKnownValue
 
