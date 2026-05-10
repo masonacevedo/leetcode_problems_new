@@ -20,45 +20,28 @@ class Solution:
             adjList[node1].append((node2, edgeWeight))
             adjList[node2].append((node1, edgeWeight))
         
-        # print("adjList:", adjList)
-        # for k,v in adjList.items():
-        #     print(k,"|",v)
-
+       
         bestSoFar = {i:float('inf') for i in adjList.keys()}
         bestSoFar[start_node] = 0
 
-        # print("bestSoFar:", bestSoFar)
-
+        
         unvisited = [(0, start_node)]
         visited = set()
-        # print("before while loop")
         while len(visited) < n and len(unvisited) > 0:
-            # print("unvisited:", unvisited)
             bestToCurrent, currentNode = heappop(unvisited)
-            # print("bestToCurrent:", bestToCurrent)
-            # print("currentNode:", currentNode)
             neighbors = adjList[currentNode]
-            # print("neighbors:", neighbors)
-
+        
             for pair in neighbors:
                 neighbor, distance = pair
-                # print("bestToCurrent:", bestToCurrent)
-                # print("distance:", distance)
-                # print("bestSoFar[neighbor]:", bestSoFar[neighbor])
                 if distance + bestToCurrent < bestSoFar[neighbor]:
                     bestSoFar[neighbor] = distance + bestToCurrent
                     heappush(unvisited, (bestSoFar[neighbor], neighbor))
 
             visited.add(currentNode)
         
-        # if we complete our traversal and we've emptied the visiting map without 
-        # seeing all the nodes, this means that the start node is not connected
-        # to the end node.
         if len(visited) == 0:
             return 0.0
         
-        # print("bestSoFar:", bestSoFar)
-
         pathLength = bestSoFar[end_node]
         return 1/math.exp(pathLength)
 
