@@ -11,10 +11,6 @@ class Node:
         ans += str(self.value)
         ans += "|"
         ans += str(self.bestKnownValue)
-        # ans += "->"
-        # for pair in self.neighbors:
-        #     node, distance = pair
-        #     ans += "(" + str(node.value) + "," + str(distance) + ");"
         
         return ans
     
@@ -22,7 +18,6 @@ class Node:
         return self.bestKnownValue < other.bestKnownValue
 
 def shortestPath(startNode, endNode, nodeMap):
-
 
     unvisited = []
     startNode.bestKnownValue = 0
