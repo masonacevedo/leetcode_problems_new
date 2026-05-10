@@ -1,16 +1,20 @@
 from heapq import heapify, heappush, heappop
 
 class Node:
-    def __init__(self, value, neighbors=None, bestKnownValue=float('inf')):
+    def __init__(self, value, neighbors=None, bestKnownValue=float('inf'), backPointer=None):
         self.value = value
         self.neighbors = neighbors if neighbors is not None else []
         self.bestKnownValue = bestKnownValue
+        self.backPointer = backPointer
 
     def __repr__(self):
         ans = ""
         ans += str(self.value)
-        ans += "|"
-        ans += str(self.bestKnownValue)
+        # ans += "|"
+        # ans += str(self.bestKnownValue)
+        # ans += "|"
+        # if self.backPointer:
+        #     ans += str(self.backPointer.value)
         
         return ans
     
@@ -36,10 +40,18 @@ def shortestPath(startNode, endNode, nodeMap):
             if distanceThroughCurrentNode < neighbor.bestKnownValue:
                 neighbor.bestKnownValue = distanceThroughCurrentNode
                 heappush(unvisited, neighbor)
+                neighbor.backPointer = currentNode
 
         visitCount += 1
 
-    return endNode.bestKnownValue
+    path = []
+    currentNode = endNode
+    while currentNode.backPointer:
+        path.append(currentNode)
+        currentNode = currentNode.backPointer
+    path.append(startNode)
+
+    return list(reversed(path))
 
 
 
@@ -71,10 +83,6 @@ for edge in edges:
     node2.neighbors.append((node1, edgeWeight))
     
 
-for node in nodeMap.values():
-    print(node)
-print()
-ans = shortestPath(nodeMap[0], nodeMap[3], nodeMap)
+ans = shortestPath(nodeMap[0], nodeMap[6], nodeMap)
 
-for k,v in nodeMap.items():
-    print(k,"|",v)
+print("ans:", ans)
