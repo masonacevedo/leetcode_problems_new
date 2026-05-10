@@ -65,18 +65,22 @@ class Solution:
         unvisited = [node for node in nodeMap.values()]
         heapify(unvisited)
         # print('unvisited:', unvisited)
-        
-        visitCount = 0
-        while visitCount < n:
+        visited = set()
+        while len(visited) < n:
             currentNode = heappop(unvisited)
+            if currentNode.name in visited:
+                continue
             for pair in currentNode.neighbors:
                 neighbor, distance = pair
                 dThroughCurrent = currentNode.bestSoFar + distance
                 if dThroughCurrent < neighbor.bestSoFar:
+                    # print("dThroughCurrent:", dThroughCurrent)
+                    # if dThroughCurrent == float('inf'):
+                    #     print("shit")
                     neighbor.bestSoFar = dThroughCurrent
                     heappush(unvisited, neighbor)
             
-            visitCount += 1
+            visited.add(currentNode.name)
 
         pathLength = nodeMap[end_node].bestSoFar
         # print("nodeMap[end_node]:", nodeMap[end_node])
