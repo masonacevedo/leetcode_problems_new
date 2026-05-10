@@ -45,26 +45,21 @@ class Solution:
         return answers
 
 def evaluateQuery(query, nodeMap):
-    # to evaluate query, we should find a path if it exists,
-    # then follow the edges and compute the product along those edges.
-    # print("query:", query)
     numerator, denominator = query
     
     if (not(numerator) in nodeMap) or (not(denominator) in nodeMap):
         return -1.0
-    # input("")
+
     seenBefore = set()
-    path = findPath(nodeMap[numerator], nodeMap[denominator], seenBefore)
-    
-
-    product = 1
-    # TODO: TRAVERSE PATH AND COMPUTE PRODUCT! 
-
-    return product
+    pathProduct = findPath(nodeMap[numerator], nodeMap[denominator], seenBefore)
+    if pathProduct:
+        return pathProduct
+    else:
+        return -1.0
 
 def findPath(startNode, endNode, seenBefore):
     if startNode == endNode:
-        return [startNode]
+        return 1
     
     seenBefore.add(startNode.value)
 
@@ -73,7 +68,7 @@ def findPath(startNode, endNode, seenBefore):
         if not(neighbor.value) in seenBefore:
             remainingPath = findPath(neighbor, endNode, seenBefore)
             if remainingPath is not None:
-                return [startNode] + remainingPath
+                return edgeWeight * remainingPath
     
     return None
 
@@ -84,9 +79,13 @@ def findPath(startNode, endNode, seenBefore):
 
 s = Solution()
 
-equations = [["a","b"],["b","c"]]
-values = [2.0,3.0]
-queries = [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]
+# equations = [["a","b"],["b","c"]]
+# values = [2.0,3.0]
+# queries = [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]
+
+equations = [["a","b"],["c","d"]]
+values = [1.0,1.0]
+queries = [["a","c"],["b","d"],["b","a"],["d","c"]]
 
 ans = s.calcEquation(equations, values, queries)
 print("ans:", ans)
