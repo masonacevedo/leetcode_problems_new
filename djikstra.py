@@ -10,12 +10,6 @@ class Node:
     def __repr__(self):
         ans = ""
         ans += str(self.value)
-        # ans += "|"
-        # ans += str(self.bestKnownValue)
-        # ans += "|"
-        # if self.backPointer:
-        #     ans += str(self.backPointer.value)
-        
         return ans
     
     def __lt__(self, other):
@@ -50,7 +44,6 @@ def shortestPath(startNode, endNode, nodeMap):
         path.append(currentNode)
         currentNode = currentNode.backPointer
     path.append(startNode)
-
     return list(reversed(path))
 
 
