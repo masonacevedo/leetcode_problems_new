@@ -53,14 +53,22 @@ def shortestPath(startNode, endNode, nodeMap):
 
 
 
-nodes = [i for i in range(0, 5)]
+nodes = [i for i in range(0, 9)]
 edges = [
     [0, 1, 4],
-    [0, 2, 8],
-    [1, 2, 3],
-    [1, 4, 6],
-    [2, 3, 2],
-    [4, 3, 10]
+    [0, 7, 8],
+    [1, 7, 11],
+    [1, 2, 8],
+    [7, 8, 7],
+    [7, 6, 1],
+    [2, 3, 7],
+    [8, 2, 2],
+    [2, 5, 4],
+    [6, 8, 6],
+    [6, 5, 2],
+    [3, 5, 14],
+    [3, 4, 9],
+    [4, 5, 10],
 ]
 
 nodeMap = {k : Node(k) for k in nodes}
