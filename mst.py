@@ -3,11 +3,9 @@ from heapq import heappush, heappop
 def minimumSpanningTree(adjList):
 
     firstVertex = list(adjList.keys())[0]
-    print("firstVertex:", firstVertex)
     unvisited = [(0, firstVertex, None)]
 
     newAdjList = {k : [] for k in adjList.keys()}
-    totalCost = 0
     visited = set()
     while len(unvisited) > 0:
         costToAdd, currentNode, prevNode = heappop(unvisited)
@@ -19,7 +17,6 @@ def minimumSpanningTree(adjList):
             newAdjList[prevNode].append((currentNode, costToAdd))
             newAdjList[currentNode].append((prevNode, costToAdd))
         
-        totalCost += costToAdd
 
         for pair in adjList[currentNode]:
             neighbor, edgeWeight = pair
@@ -27,12 +24,8 @@ def minimumSpanningTree(adjList):
                 heappush(unvisited, (edgeWeight, neighbor, currentNode))
 
         visited.add(currentNode)
-    
-    # del newAdjList[None]
-    for k,v in newAdjList.items():
-        print(k, "|", v)
 
-    return totalCost
+    return newAdjList
 
 
     
