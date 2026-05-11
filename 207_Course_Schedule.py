@@ -1,85 +1,88 @@
 from typing import List
-from collections import deque
-
-# idea: we bulid a directed graph based on the prerequisites. 
-# If there are any cycles in the graph, we return true.
-# Otherwise, we return false. 
-
-class Node:
-    def __init__(self, value, neighbors=None):
-        self.value = value
-        self.neighbors = neighbors if neighbors is not None else []
-    
-    def __repr__(self):
-        ans = str(self.value)
-        ans += " | ["
-        for node in self.neighbors:
-            ans += str(node.value) + ", "
-        ans += "]"
-        return ans
+import copy
 
 class Solution:
-    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         
-        nodeMap = {}
-        for courseNumber in range(0, numCourses):
-            newNode = Node(value=courseNumber, neighbors=None)
-            nodeMap[courseNumber] = newNode
+        adjList = {}
+        for i in range(0, numCourses):
+            adjList[i] = []
         
-        for prereq in prerequisites:
-            courseNum1, courseNum2 = prereq
-            node1 = nodeMap[courseNum1]
-            node2 = nodeMap[courseNum2]
+        for pair in prerequisites:
+            beforeCourse, afterCourse = pair
+            adjList[beforeCourse].append(afterCourse)
+        
+        allOrderings = topSort(adjList)
+        # print("allOrderings:", allOrderings)
+        if len(allOrderings) == 0:
+            return []
+        return allOrderings[0]
 
-            node1.neighbors.append(node2)
+def topSort(adjList):
+    inDegreeMap = {node: 0 for node in adjList.keys()}
 
-        # seenBefore = set()
-        for course in range(0, numCourses):
-            # print("course:", course)
-
-            startingNode = nodeMap[course]
-            # print("startingNode:", startingNode)
-            onCurrentPath = set()
-            visitedBefore = set()
-            if detectCycle(startingNode, onCurrentPath, visitedBefore):
-                # print("cycle detected!")
-                return False
-            else:
-                pass
-                # print("cycle not detected")
-            # print()
-        
-        return True
-        
-        
-def detectCycle(startingNode, onCurrentPath, visitedBefore):
-
-    if startingNode.value in visitedBefore:
-        # if we've reached a node that we've already explored - no need to explore it again
-        return False
+    for node, neighbors in adjList.items():
+        for neighbor in neighbors:
+            inDegreeMap[neighbor] += 1
     
-    if startingNode.value in onCurrentPath:
-        # if a starting node is in the current path, we've found a cycle! 
-        return True
+    visited = set()
+    # print("inDegreeMap:", inDegreeMap)
     
-    onCurrentPath.add(startingNode.value)
+    reversedOrderings = topSortRecursive(inDegreeMap, adjList)
+    # possibleOrderings = [list(reversed(o)) for o in reversedOrderings]
+    return reversedOrderings
 
-    for neighbor in startingNode.neighbors:
-        if detectCycle(neighbor, onCurrentPath, visitedBefore):
-            return True
+def topSortRecursive(inDegreeMap, adjList):
+    # print("adjList:", adjList)
+    # print("inDegreeMap:", inDegreeMap)
+    # input()
+    if len(adjList) == 1:
+        onlyKey = list(adjList.keys())[0]
+        return [[onlyKey]]
+
+    allOrderings = []
+    for node in inDegreeMap.keys():
+        degree = inDegreeMap[node]
+
+        # print("node:", node)
+        # print("degree:", degree)
+        # # input()
+        if degree == 0:
+            newAdjList = copy.deepcopy(adjList)
+            newInDegreeMap = copy.deepcopy(inDegreeMap)
+
+            for neighbor in newAdjList[node]:
+                newInDegreeMap[neighbor] -= 1
     
-    onCurrentPath.remove(startingNode.value)
-    visitedBefore.add(startingNode.value)
+            del newAdjList[node]
+            del newInDegreeMap[node]
+            recursiveResult = topSortRecursive(newInDegreeMap, newAdjList)
 
-    return False
-        
+            for ordering in recursiveResult:
+                ordering.append(node)
+    
+                allOrderings.append(ordering)
 
-numCourses = 5
-prerequisites = [[1,4],[2,4],[3,1],[3,2]]
-# prerequisites = [[1,0],[2,6],[1,7],[6,4],[7,0],[0,5]]
-# prerequisites = [[0,1], [1,0]]
 
+    return allOrderings
+
+    
 s = Solution()
-ans = s.canFinish(numCourses, prerequisites)
 
+numCourses = 4
+prerequisites = [
+    [2,1],
+    [3,1],
+    [1,0],
+    
+
+]
+# prerequisites = [
+#     [0,1],
+#     [1,0]
+# ]
+
+# prerequisites = [[1,0],[1,2],[0,1]]
+
+ans = s.findOrder(numCourses, prerequisites)
 print("ans:", ans)
