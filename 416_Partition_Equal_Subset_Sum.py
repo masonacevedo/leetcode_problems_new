@@ -12,9 +12,16 @@ def subsetSum(nums, target, memo):
     if len(nums) == 1:
         return nums[0] == target
     
+    if target < 0:
+        return False
+    
+    
+
     key = (tuple(nums), target)
     if key in memo:
         return memo[key]
+    
+
     firstNum = nums[0]
 
     useIt = subsetSum(nums[1:], target - firstNum, memo)
