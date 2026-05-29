@@ -13,7 +13,10 @@ def maxPathHelper(grid, k, row, col, currentScore, currentCost, memo):
     # print("col:", col)
     # print()
 
-    
+    key = (row, col)
+    if key in memo:
+        return memo[key]
+
     currentTile = grid[row][col]
     if currentTile == 0:
         newScore = currentScore
@@ -43,16 +46,14 @@ def maxPathHelper(grid, k, row, col, currentScore, currentCost, memo):
     else:
         moveDown = -1
     
-    # print('moveDown:', moveDown)
-    # print('moveRight:', moveRight)
-    # input("enter to con")
+    memo[key]= max(moveDown, moveRight)
     return max(moveDown, moveRight)
 
 grid = [
     [0, 1],
     [1, 2]
 ]
-k = 1
+k = 2
 s = Solution()
 
 ans = s.maxPathScore(grid, k)
