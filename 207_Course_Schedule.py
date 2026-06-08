@@ -13,7 +13,6 @@ class Solution:
             adjList[beforeCourse].append(afterCourse)
         
         allOrderings = topSort(adjList)
-        # print("allOrderings:", allOrderings)
         if len(allOrderings) == 0:
             return []
         return allOrderings[0]
@@ -24,45 +23,35 @@ def topSort(adjList):
     for node, neighbors in adjList.items():
         for neighbor in neighbors:
             inDegreeMap[neighbor] += 1
-    
+
     visited = set()
-    # print("inDegreeMap:", inDegreeMap)
     
-    reversedOrderings = topSortRecursive(inDegreeMap, adjList)
-    # possibleOrderings = [list(reversed(o)) for o in reversedOrderings]
-    return reversedOrderings
+    orderings = topSortRecursive(inDegreeMap, adjList)
+    return orderings
 
 def topSortRecursive(inDegreeMap, adjList):
-    # print("adjList:", adjList)
-    # print("inDegreeMap:", inDegreeMap)
-    # input()
     if len(adjList) == 1:
         onlyKey = list(adjList.keys())[0]
         return [[onlyKey]]
 
     allOrderings = []
-    for node in inDegreeMap.keys():
-        degree = inDegreeMap[node]
+    for node, degree in inDegreeMap.items():
+        if degree != 0:
+            continue
 
-        # print("node:", node)
-        # print("degree:", degree)
-        # # input()
-        if degree == 0:
-            newAdjList = copy.deepcopy(adjList)
-            newInDegreeMap = copy.deepcopy(inDegreeMap)
+        newAdjList = copy.deepcopy(adjList)
+        newInDegreeMap = copy.deepcopy(inDegreeMap)
 
-            for neighbor in newAdjList[node]:
-                newInDegreeMap[neighbor] -= 1
-    
-            del newAdjList[node]
-            del newInDegreeMap[node]
-            recursiveResult = topSortRecursive(newInDegreeMap, newAdjList)
+        for neighbor in newAdjList[node]:
+            newInDegreeMap[neighbor] -= 1
 
-            for ordering in recursiveResult:
-                ordering.append(node)
-    
-                allOrderings.append(ordering)
+        del newAdjList[node]
+        del newInDegreeMap[node]
+        recursiveResult = topSortRecursive(newInDegreeMap, newAdjList)
 
+        for ordering in recursiveResult:
+            ordering.append(node)
+            allOrderings.append(ordering)
 
     return allOrderings
 
