@@ -1,81 +1,50 @@
 from heapq import heapify, heappush, heappop
-
-class Node:
-    def __init__(self, value, neighbors=None, bestKnownValue=float('inf'), backPointer=None):
-        self.value = value
-        self.neighbors = neighbors if neighbors is not None else []
-        self.bestKnownValue = bestKnownValue
-        self.backPointer = backPointer
-
-    def __repr__(self):
-        ans = ""
-        ans += str(self.value)
-        return ans
+def shortestPath(source, dest, adjList):
     
-    def __lt__(self, other):
-        return self.bestKnownValue < other.bestKnownValue
+    bestSoFar = {node: float('inf') for node in adjList.keys()}
 
-def shortestPath(startNode, endNode, nodeMap):
+    bestSoFar[source] = 0
+    
+    heap = [(0, source)]
+    visited = set()
 
-    unvisited = []
-    startNode.bestKnownValue = 0
-    for node in nodeMap.values():
-        unvisited.append(node)
-    heapify(unvisited)
+    while len(heap) > 0:
+        _, currentNode = heappop(heap)
+        if currentNode in visited:
+            continue
 
-    visitCount = 0
-    n = len(nodeMap)
-    while visitCount < n:
-        currentNode = heappop(unvisited)
+        for neighbor, distance in adjList[currentNode]:
+            if bestSoFar[currentNode] + distance < bestSoFar[neighbor]:
+                bestSoFar[neighbor] = bestSoFar[currentNode] + distance
+                heappush(heap, (bestSoFar[neighbor], neighbor))
         
-        for pair in currentNode.neighbors:
-            neighbor, distance = pair
-            distanceThroughCurrentNode = currentNode.bestKnownValue + distance
-            if distanceThroughCurrentNode < neighbor.bestKnownValue:
-                neighbor.bestKnownValue = distanceThroughCurrentNode
-                heappush(unvisited, neighbor)
-                neighbor.backPointer = currentNode
+        visited.add(currentNode)
 
-        visitCount += 1
-
-    path = []
-    currentNode = endNode
-    while currentNode.backPointer:
-        path.append(currentNode)
-        currentNode = currentNode.backPointer
-    path.append(startNode)
-    return list(reversed(path))
+    return bestSoFar[dest]
+                
 
 
 
-nodes = [i for i in range(0, 9)]
+nodes = [i for i in range(0, 5)]
 edges = [
-    [0, 1, 4],
-    [0, 7, 8],
-    [1, 7, 11],
-    [1, 2, 8],
-    [7, 8, 7],
-    [7, 6, 1],
-    [2, 3, 7],
-    [8, 2, 2],
-    [2, 5, 4],
-    [6, 8, 6],
-    [6, 5, 2],
-    [3, 5, 14],
-    [3, 4, 9],
-    [4, 5, 10],
+    [0, 4, 8],
+    [0, 1, 3],
+    [0, 3, 7],
+    [4,3,7],
+    [1,3,4],
+    [1,2,1],
+    [3,2,2]
 ]
 
-nodeMap = {k : Node(k) for k in nodes}
+ADJACENCY_LIST = {n : [] for n in nodes}
 
 for edge in edges:
-    label1, label2, edgeWeight = edge
-    node1, node2 = nodeMap[label1], nodeMap[label2]
+    node1, node2, edgeWeight = edge
 
-    node1.neighbors.append((node2, edgeWeight))
-    node2.neighbors.append((node1, edgeWeight))
+    ADJACENCY_LIST[node1].append((node2, edgeWeight))
+    ADJACENCY_LIST[node2].append((node1, edgeWeight))
     
 
-ans = shortestPath(nodeMap[0], nodeMap[6], nodeMap)
+ans = shortestPath(0, 2, ADJACENCY_LIST)
 
 print("ans:", ans)
