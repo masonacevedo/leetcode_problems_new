@@ -16,39 +16,38 @@ class Solution:
                 inDegrees[neighbor] += 1
         
         
-        return not(hasCycle(inDegrees, adjList))
+        if topOrder(inDegrees, adjList):
+            return True
+        else:
+            return False
+        
     
-def hasCycle(inDegrees, adjList):
+def topOrder(inDegrees, adjList):
     
-    # algorithm: identify a node w/ inDegree 0. 
-    #           while there remains nodes of length 0:
-    #               pop a node off the queue.
-    #               add it to the answer.
-    #               remove it from the graph.
-    #               if any other nodes have inDegree 0,
-    #               add them to the queue. 
-    #               keep a set of nodes we've visited, and if we visit the same node twice, 
-
     queue = deque([])
     for node, inDegree in inDegrees.items():
         if inDegree == 0:
             queue.append(node)
     
     if len(queue) == 0:
-        return True
+        return None
     
+
+    result = []
     processed = 0
     while len(queue) > 0:
         currentNode = queue.popleft()
+        result.append(currentNode)
         for neighbor in adjList[currentNode]:
             inDegrees[neighbor] -= 1
             if inDegrees[neighbor] == 0:
                 queue.append(neighbor)
         processed += 1
 
-    # print("processed:", processed)
-    # print("len(adjList):", len(adjList))
-    return processed != len(adjList)        
+    if processed != len(adjList):
+        return None
+    else:
+        return result
     
 
         
@@ -56,7 +55,7 @@ def hasCycle(inDegrees, adjList):
 s = Solution()
 
 numCourses = 6
-prerequisites = [[0,1],[1,2],[2,3], [3,4], [4,5], [5,3]]
+prerequisites = [[0,1],[1,2],[2,5], [1,4], [0,3], [3,4], [4,5]]
 
 ans = s.canFinish(numCourses, prerequisites)
 print("ans:", ans)
