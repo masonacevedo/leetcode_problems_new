@@ -1,4 +1,5 @@
 from typing import List
+from collections import deque
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
@@ -8,40 +9,54 @@ class Solution:
             before, after = edge
             adjList[before].append(after)
         
-        unvisited = set(range(0, numCourses))
-        while len(unvisited) > 0:
-            currentNode = next(iter(unvisited))
-            result = hasCycle(currentNode, adjList, unvisited, currentPath = set())
-            if result:
-                return False
+        inDegrees = {i:0 for i in range(0, numCourses)}
 
+        for node, neighbors in adjList.items():
+            for neighbor in neighbors:
+                inDegrees[neighbor] += 1
+        
+        
+        return not(hasCycle(inDegrees, adjList))
+    
+def hasCycle(inDegrees, adjList):
+    
+    # algorithm: identify a node w/ inDegree 0. 
+    #           while there remains nodes of length 0:
+    #               pop a node off the queue.
+    #               add it to the answer.
+    #               remove it from the graph.
+    #               if any other nodes have inDegree 0,
+    #               add them to the queue. 
+    #               keep a set of nodes we've visited, and if we visit the same node twice, 
+
+    queue = deque([])
+    for node, inDegree in inDegrees.items():
+        if inDegree == 0:
+            queue.append(node)
+    
+    if len(queue) == 0:
         return True
     
-def hasCycle(currentNode, adjList, unvisited, currentPath):
-    if currentNode in currentPath:
-        return True
-    
-    # if the current node has been visited before, 
-    # we haven't found a cycle yet, so we're done.
-    if currentNode not in unvisited:
-        return False
-    
-    currentPath.add(currentNode)
+    processed = 0
+    while len(queue) > 0:
+        currentNode = queue.popleft()
+        for neighbor in adjList[currentNode]:
+            inDegrees[neighbor] -= 1
+            if inDegrees[neighbor] == 0:
+                queue.append(neighbor)
+        processed += 1
 
-    for neighbor in adjList[currentNode]:
-        result = hasCycle(neighbor, adjList, unvisited, currentPath)
-        if result:
-            return True
+    # print("processed:", processed)
+    # print("len(adjList):", len(adjList))
+    return processed != len(adjList)        
     
-    currentPath.remove(currentNode)
-    unvisited.remove(currentNode)
-    return False
 
+        
 
 s = Solution()
 
-numCourses = 4
-prerequisites = [[0,1],[1,2],[2,3]]
+numCourses = 6
+prerequisites = [[0,1],[1,2],[2,3], [3,4], [4,5], [5,3]]
 
 ans = s.canFinish(numCourses, prerequisites)
 print("ans:", ans)
