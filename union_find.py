@@ -4,6 +4,8 @@ class UnionFind:
         self.sizes = {}
     
     def add(self, x):
+        if x in self.parents:
+            return
         self.parents[x] = None
         self.sizes[x] = 1
     
@@ -41,11 +43,11 @@ class UnionFind:
     
     def sameSet(self, x, y):
         return self.find(x) == self.find(y)
-    
+
     def neighbors(self, x):
         root = self.find(x)
         return set([node for node in self.parents.keys() if self.find(node) == root])
-    
+
     def subsets(self):
         return {node : self.neighbors(node) for node in self.parents.keys() if self.find(node) == node}
 
