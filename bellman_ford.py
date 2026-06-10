@@ -11,12 +11,25 @@ def bellmanFord(source, dest, adjList):
     bestSoFar[source] = 0
     
     for i in range(0, len(bestSoFar) - 1):
-        for edge in adjList:
-            source, dest, weight = edge
-            if bestSoFar[source] + weight < bestSoFar[dest]:
-                bestSoFar[dest] = bestSoFar[source] + weight
+        bestSoFar, madeOffer = makeOffers(adjList, bestSoFar)
+        if not(madeOffer):
+            print("breaking early")
+            break
+
+    if bestSoFar != makeOffers(adjList, bestSoFar)[0]:
+        raise Exception("Negative cycle found in graph. No minimum path exists.")
     
-    print("bestSoFar:", bestSoFar)
+    return bestSoFar
+
+def makeOffers(adjList, bestSoFar):
+    madeOffer = False
+    for edge in adjList:
+        source, dest, weight = edge
+        if bestSoFar[source] + weight < bestSoFar[dest]:
+            madeOffer = True
+            bestSoFar[dest] = bestSoFar[source] + weight
+
+    return bestSoFar, madeOffer
 
 
 
@@ -25,7 +38,7 @@ def bellmanFord(source, dest, adjList):
 ADJACENCY_LIST = [
     [0,1,10],
     [0,2,4],
-    [1,0, 10],
+    [1,0,10],
     [2,0,4],
     [1,2,3],
     [2,1,3],
@@ -35,7 +48,8 @@ ADJACENCY_LIST = [
     [3,4,8],
     [4,3,8],
     [4,5,-6],
-    [3,5,9]
+    [3,5,9],
+    [5,3,9]
 ]
 
 print("bellmanFord:", bellmanFord(0, 5, ADJACENCY_LIST))
