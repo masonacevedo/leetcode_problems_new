@@ -19,6 +19,9 @@ class UnionFind:
     def merge(self, x, y):
         if not(x in self.parents and y in self.parents):
             raise Exception(f"One of {x} and {y} is not in the data structure!")
+        if x == self.parents[y] or y == self.parents[x]:
+            return
+
         root_x = self.find(x)
         root_y = self.find(y)
 
@@ -44,6 +47,8 @@ assert(not(uf.sameSet("b", "d")))
 assert(not(uf.sameSet("c", "d")))
 print("uf:", uf)
 uf.merge("a","b")
+print('uf:', uf)
+print()
 assert(uf.sameSet("a", "b"))
 assert(not(uf.sameSet("a", "c")))
 assert(not(uf.sameSet("a", "d")))
@@ -53,6 +58,8 @@ assert(not(uf.sameSet("c", "d")))
 
 print("uf:", uf)
 uf.merge("b", "c")
+print("uf:", uf)
+print()
 assert(uf.sameSet("a", "b"))
 assert(uf.sameSet("a", "c"))
 assert(not(uf.sameSet("a", "d")))
@@ -62,6 +69,8 @@ assert(not(uf.sameSet("c", "d")))
 
 print("uf:", uf)
 uf.merge("c", "d")
+print("uf:", uf)
+print()
 
 assert(uf.sameSet("a", "b"))
 assert(uf.sameSet("a", "c"))
@@ -70,4 +79,5 @@ assert(uf.sameSet("b", "c"))
 assert(uf.sameSet("b", "d"))
 assert(uf.sameSet("c", "d"))
 
-print(uf)
+print("uf:", uf)
+uf.merge("d", "a")
