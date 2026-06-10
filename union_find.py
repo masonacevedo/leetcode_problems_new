@@ -7,8 +7,13 @@ class UnionFind:
     
     def find(self, x):
         currentNode = x
+        nodesSeen = []
         while self.parents[currentNode] is not None:
+            nodesSeen.append(currentNode)
             currentNode = self.parents[currentNode]
+        
+        for node in nodesSeen:
+            self.parents[node] = currentNode
         return currentNode
     
     def merge(self, x, y):
@@ -37,7 +42,7 @@ assert(not(uf.sameSet("a", "d")))
 assert(not(uf.sameSet("b", "c")))
 assert(not(uf.sameSet("b", "d")))
 assert(not(uf.sameSet("c", "d")))
-
+print("uf:", uf)
 uf.merge("a","b")
 assert(uf.sameSet("a", "b"))
 assert(not(uf.sameSet("a", "c")))
@@ -46,6 +51,7 @@ assert(not(uf.sameSet("b", "c")))
 assert(not(uf.sameSet("b", "d")))
 assert(not(uf.sameSet("c", "d")))
 
+print("uf:", uf)
 uf.merge("b", "c")
 assert(uf.sameSet("a", "b"))
 assert(uf.sameSet("a", "c"))
@@ -54,6 +60,7 @@ assert(uf.sameSet("b", "c"))
 assert(not(uf.sameSet("b", "d")))
 assert(not(uf.sameSet("c", "d")))
 
+print("uf:", uf)
 uf.merge("c", "d")
 
 assert(uf.sameSet("a", "b"))
