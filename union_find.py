@@ -24,7 +24,8 @@ class UnionFind:
     def merge(self, x, y):
         if not(x in self.parents and y in self.parents):
             raise Exception(f"One of {x} and {y} is not in the data structure!")
-        if x == self.parents[y] or y == self.parents[x]:
+
+        if self.find(x) == self.find(y):
             return
 
         root_x = self.find(x)
@@ -39,8 +40,15 @@ class UnionFind:
         self.sizes[bigger] += self.sizes[smaller]
     
     def sameSet(self, x, y):
-        return self.find(x) == self.find(y)    
+        return self.find(x) == self.find(y)
     
+    def neighbors(self, x):
+        root = self.find(x)
+        return set([node for node in self.parents.keys() if self.find(node) == root])
+    
+    def subsets(self):
+        return {node : self.neighbors(node) for node in self.parents.keys() if self.find(node) == node}
+
     def __repr__(self):
         return str(self.parents) + "\n" + str(self.sizes)
 
@@ -61,6 +69,12 @@ assert(not(uf.sameSet("a", "d")))
 assert(not(uf.sameSet("b", "c")))
 assert(not(uf.sameSet("b", "d")))
 assert(not(uf.sameSet("c", "d")))
+
+assert(uf.neighbors("a") == set(["a"]))
+assert(uf.neighbors("b") == set(["b"]))
+assert(uf.neighbors("c") == set(["c"]))
+assert(uf.neighbors("d") == set(["d"]))
+
 uf.merge("a","b")
 assert(uf.setSize("a") == 2)
 assert(uf.setSize("b") == 2)
@@ -73,6 +87,12 @@ assert(not(uf.sameSet("a", "d")))
 assert(not(uf.sameSet("b", "c")))
 assert(not(uf.sameSet("b", "d")))
 assert(not(uf.sameSet("c", "d")))
+
+
+assert(uf.neighbors("a") == set(["a", "b"]))
+assert(uf.neighbors("b") == set(["b", "a"]))
+assert(uf.neighbors("c") == set(["c"]))
+assert(uf.neighbors("d") == set(["d"]))
 
 uf.merge("b", "c")
 
@@ -88,6 +108,13 @@ assert(uf.sameSet("b", "c"))
 assert(not(uf.sameSet("b", "d")))
 assert(not(uf.sameSet("c", "d")))
 
+
+assert(uf.neighbors("a") == set(["a", "b", "c"]))
+assert(uf.neighbors("b") == set(["b", "a", "c"]))
+assert(uf.neighbors("c") == set(["c", "a", "b"]))
+assert(uf.neighbors("d") == set(["d"]))
+
+
 uf.merge("c", "d")
 
 assert(uf.setSize("a") == 4)
@@ -102,5 +129,27 @@ assert(uf.sameSet("b", "c"))
 assert(uf.sameSet("b", "d"))
 assert(uf.sameSet("c", "d"))
 
-print("uf:", uf)
+
+assert(uf.neighbors("a") == set(["a", "b", "c", "d"]))
+assert(uf.neighbors("b") == set(["b", "a", "c", "d"]))
+assert(uf.neighbors("c") == set(["c", "a", "b", "d"]))
+assert(uf.neighbors("d") == set(["d", "a", "b", "c"]))
+
 uf.merge("d", "a")
+
+assert(uf.setSize("a") == 4)
+assert(uf.setSize("b") == 4)
+assert(uf.setSize("c") == 4)
+assert(uf.setSize("d") == 4)
+
+assert(uf.sameSet("a", "b"))
+assert(uf.sameSet("a", "c"))
+assert(uf.sameSet("a", "d"))
+assert(uf.sameSet("b", "c"))
+assert(uf.sameSet("b", "d"))
+assert(uf.sameSet("c", "d"))
+
+assert(uf.neighbors("a") == set(["a", "b", "c", "d"]))
+assert(uf.neighbors("b") == set(["b", "a", "c", "d"]))
+assert(uf.neighbors("c") == set(["c", "a", "b", "d"]))
+assert(uf.neighbors("d") == set(["d", "a", "b", "c"]))
