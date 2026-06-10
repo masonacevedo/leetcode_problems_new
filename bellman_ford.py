@@ -1,7 +1,4 @@
 def bellmanFord(source, dest, adjList):
-    # uses bellman-ford algorithm to find
-    # the shorest path from source to dest
-    # in a directed, weighted graph with no negative cycles.
     bestSoFar = {}
     for edge in adjList:
         node1, node2, _ = edge
@@ -18,9 +15,6 @@ def bellmanFord(source, dest, adjList):
 
     lastOffer = makeOffers(adjList, bestSoFar)
     if lastOffer:
-        print(bestSoFar)
-        makeOffers(adjList, bestSoFar)
-        print(bestSoFar)
         raise Exception("Negative cycle found in graph. No minimum path exists.")
     
     return bestSoFar
