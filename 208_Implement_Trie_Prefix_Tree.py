@@ -24,33 +24,43 @@ class Trie:
         
 
     def insert(self, word: str) -> None:
+        # print("begin insert")
+        # breakpoint()
 
-        i = 0
-        currentNode = self.root
-        while i < len(word):
-            char = word[i]
-            availableChars = [c.value for c in currentNode.children]
-            if char not in availableChars:
-                break
-
-            nextChildIndex = availableChars.index(char)
-            currentNode = currentNode.children[nextChildIndex]
-
-            i += 1
+        lastNode, i = self._navigate(word)
 
         if i == len(word):
-            currentNode.isFinal = True
+            lastNode.isFinal = True
             return
         
         prevNode = Node(value = word[i], isFinal = False)
-        currentNode.children.append(prevNode)
+        lastNode.children.append(prevNode)
         # breakpoint()
         for char in word[i+1:]:
             prevNode = self._procesChar(char, prevNode)
 
         prevNode.isFinal = True
         
+    def _navigate(self, word):
+        # print("beging navigate")
+        # breakpoint()
+        i = 0
+        currentNode = self.root
+        while i < len(word):
+            char = word[i]
+            availableChars = [c.value for c in currentNode.children]
+            if char not in availableChars:
+                # print("end navigate")
+                # breakpoint()
+                return currentNode, i
 
+            nextChildIndex = availableChars.index(char)
+            currentNode = currentNode.children[nextChildIndex]
+
+            i += 1
+        # print("end neavigate")
+        # breakpoint()
+        return currentNode, i
 
     def _procesChar(self, char, parentNode):
         newNode = Node(char, isFinal = False)
@@ -59,20 +69,8 @@ class Trie:
         
 
     def search(self, word: str) -> bool:
-        i = 0
-        currentNode = self.root
-        while i < len(word):
-            char = word[i]
-            availableChars = [c.value for c in currentNode.children]
-            if char not in availableChars:
-                return False
-
-            nextChildIndex = availableChars.index(char)
-            currentNode = currentNode.children[nextChildIndex]
-
-            i += 1
-
-        return currentNode.isFinal
+        lastNode, _ = self._navigate(word)
+        return lastNode.isFinal
 
         
 
