@@ -27,6 +27,8 @@ class Trie:
 
         i = 0
         currentNode = self.root
+        # print("about to navigate down tree")
+        # breakpoint()
         while i < len(word):
             char = word[i]
             availableChars = [c.value for c in currentNode.children]
@@ -41,13 +43,18 @@ class Trie:
         if i == len(word):
             currentNode.isFinal = True
             return
-
+        # print("done navigating. building new nodes")
+        # # breakpoint()
+        
         prevNode = Node(value = word[i], isFinal = False)
-        self.root = Node(value="*", isFinal = False, children = [prevNode])
+        currentNode.children.append(prevNode)
+        # breakpoint()
         for char in word[i+1:]:
             prevNode = self._procesChar(char, prevNode)
 
         prevNode.isFinal = True
+        # print("done. final state:")
+        # breakpoint()
         
 
 
@@ -58,19 +65,25 @@ class Trie:
         
 
     def search(self, word: str) -> bool:
+        # # breakpoint()
         # pass
         i = 0
         currentNode = self.root
+        # breakpoint()
         while i < len(word):
             char = word[i]
             availableChars = [c.value for c in currentNode.children]
+            # breakpoint()
             if char not in availableChars:
+                # breakpoint()
                 return False
 
             nextChildIndex = availableChars.index(char)
             currentNode = currentNode.children[nextChildIndex]
 
             i += 1
+            # breakpoint()
+
         return currentNode.isFinal
 
         
@@ -82,12 +95,14 @@ class Trie:
             char = prefix[i]
             availableChars = [c.value for c in currentNode.children]
             if char not in availableChars:
+                # breakpoint()
                 return False
 
             nextChildIndex = availableChars.index(char)
             currentNode = currentNode.children[nextChildIndex]
 
             i += 1
+            # breakpoint()
         return True
 
 
@@ -96,9 +111,24 @@ class Trie:
 
 trie = Trie()
 trie.insert("apple")
+trie.insert("applexyz")
 
 assert(trie.search("apple"))
 assert(not(trie.search("app")))
 assert(trie.startsWith("app"))
 trie.insert("app")
 assert(trie.search("app"))
+
+
+trie = Trie()
+
+commands = ["Trie","insert","search","search","startsWith","startsWith","insert","search","startsWith","insert","search","startsWith"]
+inputs = [[],["ab"],["abc"],["ab"],["abc"],["ab"],["ab"],["abc"],["abc"],["abc"],["abc"],["abc"]]
+
+for command, argument in zip(commands[1:], inputs[1:]):
+    if command == "insert":
+        # print(f"inserting {argument[0]}")
+        trie.insert(argument[0])
+
+assert(trie.search("abc"))
+assert(trie.startsWith("abc"))
