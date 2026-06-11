@@ -69,25 +69,17 @@ class Trie:
         
 
     def search(self, word: str) -> bool:
-        lastNode, _ = self._navigate(word)
+        lastNode, i = self._navigate(word)
+        # breakpoint()
+        if i < len(word):
+            return False
         return lastNode.isFinal
 
         
 
     def startsWith(self, prefix: str) -> bool:
-        i = 0
-        currentNode = self.root
-        while i < len(prefix):
-            char = prefix[i]
-            availableChars = [c.value for c in currentNode.children]
-            if char not in availableChars:
-                return False
-
-            nextChildIndex = availableChars.index(char)
-            currentNode = currentNode.children[nextChildIndex]
-
-            i += 1
-        return True
+        lastNode, i = self._navigate(prefix)
+        return i == len(prefix)
 
 
 
@@ -103,12 +95,14 @@ assert(trie.startsWith("app"))
 trie.insert("app")
 assert(trie.search("app"))
 
+trie = Trie()
+trie.insert("hello")
+assert(not(trie.search("hell")))
+assert(not(trie.search("helloa")))
 
 trie = Trie()
-
 commands = ["Trie","insert","search","search","startsWith","startsWith","insert","search","startsWith","insert","search","startsWith"]
 inputs = [[],["ab"],["abc"],["ab"],["abc"],["ab"],["ab"],["abc"],["abc"],["abc"],["abc"],["abc"]]
-
 for command, argument in zip(commands[1:], inputs[1:]):
     if command == "insert":
         # print(f"inserting {argument[0]}")
