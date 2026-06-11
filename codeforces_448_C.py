@@ -1,5 +1,13 @@
-numPlanks = 5
-plankHeights = [2, 2, 1, 2, 1]
+
+
+import sys
+input = sys.stdin.readline
+
+n = int(input())
+a = list(map(int, input().split()))
+
+# your logic here
+
 
 def numStrokes(plankHeights, memo = None):
     if memo is None:
@@ -34,5 +42,4 @@ def horizontalStroke(plankHeights, memo):
     return numStrokes(remainingPlanks, memo)
 
 
-ans = numStrokes(plankHeights)
-print("ans:", ans)
+print(numStrokes(a))
