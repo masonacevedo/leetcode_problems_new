@@ -20,17 +20,34 @@ class Node:
 class Trie:
 
     def __init__(self):
-        self.root = None
+        self.root = Node(value = "*", isFinal = False)
         
 
     def insert(self, word: str) -> None:
-        if self.root is None:            
-            prevNode = Node(value = word[0], isFinal = False)
-            self.root = Node(value="*", isFinal = False, children = [prevNode])
-            for char in word[1:]:
-                prevNode = self._procesChar(char, prevNode)
-                
-            prevNode.isFinal = True
+        
+        i = 0
+        currentNode = self.root
+        while i < len(word):
+            char = word[i]
+            availableChars = [c.value for c in currentNode.children]
+            if char not in availableChars:
+                break
+            
+            nextChildIndex = availableChars.index(char)
+            currentNode = currentNode.children[nextChildIndex]
+
+            i += 1
+        
+        if i == len(word):
+            currentNode.isFinal = True
+            return
+
+        prevNode = Node(value = word[i], isFinal = False)
+        self.root = Node(value="*", isFinal = False, children = [prevNode])
+        for char in word[i+1:]:
+            prevNode = self._procesChar(char, prevNode)
+            
+        prevNode.isFinal = True
         
 
 
@@ -59,7 +76,19 @@ class Trie:
         
 
     def startsWith(self, prefix: str) -> bool:
-        pass
+        i = 0
+        currentNode = self.root
+        while i < len(prefix):
+            char = prefix[i]
+            availableChars = [c.value for c in currentNode.children]
+            if char not in availableChars:
+                return False
+            
+            nextChildIndex = availableChars.index(char)
+            currentNode = currentNode.children[nextChildIndex]
+
+            i += 1
+        return True
         
 
 
@@ -69,7 +98,7 @@ trie = Trie()
 trie.insert("apple")
 
 assert(trie.search("apple"))
-# assert(not(trie.search("app")))
-# assert(trie.startsWith("app"))
-# trie.insert("app")
-# assert(trie.search("app"))
+assert(not(trie.search("app")))
+assert(trie.startsWith("app"))
+trie.insert("app")
+assert(trie.search("app"))
