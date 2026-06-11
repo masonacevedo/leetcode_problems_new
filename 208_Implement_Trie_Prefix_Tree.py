@@ -27,8 +27,6 @@ class Trie:
 
         i = 0
         currentNode = self.root
-        # print("about to navigate down tree")
-        # breakpoint()
         while i < len(word):
             char = word[i]
             availableChars = [c.value for c in currentNode.children]
@@ -43,8 +41,6 @@ class Trie:
         if i == len(word):
             currentNode.isFinal = True
             return
-        # print("done navigating. building new nodes")
-        # # breakpoint()
         
         prevNode = Node(value = word[i], isFinal = False)
         currentNode.children.append(prevNode)
@@ -53,8 +49,6 @@ class Trie:
             prevNode = self._procesChar(char, prevNode)
 
         prevNode.isFinal = True
-        # print("done. final state:")
-        # breakpoint()
         
 
 
@@ -65,24 +59,18 @@ class Trie:
         
 
     def search(self, word: str) -> bool:
-        # # breakpoint()
-        # pass
         i = 0
         currentNode = self.root
-        # breakpoint()
         while i < len(word):
             char = word[i]
             availableChars = [c.value for c in currentNode.children]
-            # breakpoint()
             if char not in availableChars:
-                # breakpoint()
                 return False
 
             nextChildIndex = availableChars.index(char)
             currentNode = currentNode.children[nextChildIndex]
 
             i += 1
-            # breakpoint()
 
         return currentNode.isFinal
 
@@ -95,14 +83,12 @@ class Trie:
             char = prefix[i]
             availableChars = [c.value for c in currentNode.children]
             if char not in availableChars:
-                # breakpoint()
                 return False
 
             nextChildIndex = availableChars.index(char)
             currentNode = currentNode.children[nextChildIndex]
 
             i += 1
-            # breakpoint()
         return True
 
 
