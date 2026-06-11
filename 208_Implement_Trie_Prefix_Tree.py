@@ -6,7 +6,7 @@ class Node:
             self.children = children
         else:
             self.children = []
-    
+
     def __repr__(self):
         ans = ""
         ans += str(self.value) + "|\n"
@@ -24,7 +24,7 @@ class Trie:
         
 
     def insert(self, word: str) -> None:
-        
+
         i = 0
         currentNode = self.root
         while i < len(word):
@@ -32,12 +32,12 @@ class Trie:
             availableChars = [c.value for c in currentNode.children]
             if char not in availableChars:
                 break
-            
+
             nextChildIndex = availableChars.index(char)
             currentNode = currentNode.children[nextChildIndex]
 
             i += 1
-        
+
         if i == len(word):
             currentNode.isFinal = True
             return
@@ -46,7 +46,7 @@ class Trie:
         self.root = Node(value="*", isFinal = False, children = [prevNode])
         for char in word[i+1:]:
             prevNode = self._procesChar(char, prevNode)
-            
+
         prevNode.isFinal = True
         
 
@@ -66,7 +66,7 @@ class Trie:
             availableChars = [c.value for c in currentNode.children]
             if char not in availableChars:
                 return False
-            
+
             nextChildIndex = availableChars.index(char)
             currentNode = currentNode.children[nextChildIndex]
 
@@ -83,13 +83,13 @@ class Trie:
             availableChars = [c.value for c in currentNode.children]
             if char not in availableChars:
                 return False
-            
+
             nextChildIndex = availableChars.index(char)
             currentNode = currentNode.children[nextChildIndex]
 
             i += 1
         return True
-        
+
 
 
 # Your Trie object will be instantiated and called as such:
