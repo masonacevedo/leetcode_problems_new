@@ -13,9 +13,17 @@ n = int(input())
 a = list(map(int, input().split()))
 
 
+def numStrokesWrapper(n, a):
+    return numStrokes(a, currentStrokes = 0, upperBound = n)
 
-def numStrokes(plankHeights, memo = None):
-    pause()
+def numStrokes(plankHeights, currentStrokes, upperBound, memo = None):
+    # pause()
+    if currentStrokes > upperBound:
+        return float('inf')
+
+    if min(plankHeights) == max(plankHeights):
+        return min(len(plankHeights), plankHeights[0])
+
     if memo is None:
         memo = {}
     if max(plankHeights) == 0:
@@ -27,26 +35,26 @@ def numStrokes(plankHeights, memo = None):
         return 1
     
 
-    bestVertical = verticalStroke(plankHeights, memo)
-    bestHorizontal = horizontalStroke(plankHeights, memo)
+    bestVertical = verticalStroke(plankHeights, currentStrokes, upperBound, memo)
+    bestHorizontal = horizontalStroke(plankHeights, currentStrokes, upperBound, memo)
     ans = min(bestVertical, bestHorizontal)
     memo[memoKey] = ans
     return ans
 
-def verticalStroke(plankHeights, memo):
+def verticalStroke(plankHeights, currentStrokes, upperBound, memo):
     answers = []
     for i in range(0, len(plankHeights)):
         remaining = plankHeights[0:i] + plankHeights[i+1:]
-        answers.append(1 + numStrokes(remaining, memo))
+        answers.append(1 + numStrokes(remaining, currentStrokes + 1, upperBound, memo))
     return min(answers)
 
 
-def horizontalStroke(plankHeights, memo):
+def horizontalStroke(plankHeights, currentStrokes, upperBound, memo):
     blocks = computeBlocks(plankHeights)
     answers = []
     for block in blocks:
         newPlankHeights, strokesPainted = paintBlocks(plankHeights, block)
-        answers.append(strokesPainted + numStrokes(newPlankHeights, memo))
+        answers.append(strokesPainted + numStrokes(newPlankHeights, currentStrokes + strokesPainted, upperBound, memo))
     return min(answers)
 
 def paintBlocks(plankHeights, block):
@@ -79,4 +87,4 @@ def computeBlocks(plankHeights):
     return ans
 
 
-print(numStrokes(a))
+print(numStrokesWrapper(n, a))
