@@ -11,10 +11,9 @@ class Solution:
         greaterAngle = max(hourAngle, minuteAngle)
         smallerAngle = min(hourAngle, minuteAngle)
 
-        if greaterAngle - smallerAngle < 180:
-            return greaterAngle - smallerAngle
-        else:
-            return 360 - (greaterAngle - smallerAngle)
+        diff = greaterAngle - smallerAngle
+
+        return min(diff, 360 - diff)
 
 s = Solution()
 
