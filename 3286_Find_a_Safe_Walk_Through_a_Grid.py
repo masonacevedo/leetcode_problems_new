@@ -13,20 +13,21 @@ class Solution:
             coords, he = queue.popleft()
             if tuple(coords + [he]) in seenBefore:
                 continue
+            # print(len(queue))
             # breakpoint()
             if coords == [len(grid)-1, len(grid[0])-1] and he >= 1:
                 # print("returning true!")
                 # breakpoint()
                 return True
-            
-            for neighbor in getNeighbors(coords, grid):
-                
-                
-                nRow, nCol = neighbor
-                if grid[nRow][nCol] == 1:
-                    queue.append((neighbor, he-1))
-                else:
-                    queue.append((neighbor, he))
+            if he >= 0:
+                for neighbor in getNeighbors(coords, grid):
+                    
+
+                    nRow, nCol = neighbor
+                    if grid[nRow][nCol] == 1:
+                        queue.append((neighbor, he-1))
+                    else:
+                        queue.append((neighbor, he))
             
             seenBefore.add(tuple(coords + [he]))
         
@@ -63,11 +64,12 @@ def getNeighbors(coords, grid):
 s = Solution()
 
 grid = [
-    [0,1,0,0,0],
-    [0,1,0,1,0],
-    [0,0,0,1,0]]
+    [0,1,1,0,0,0],
+    [1,0,1,0,0,0],
+    [0,1,1,1,0,1],
+    [0,0,1,0,1,0]]
 
-health = 1
+health = 3
 
 ans = s.findSafeWalk(grid, health)
 print("ans:", ans)
