@@ -12,7 +12,9 @@ class Solution:
         while len(queue) > 0:
             coords, he = queue.popleft()
             # breakpoint()
-            if coords == [len(grid)-1, len(grid[0])-1] and he >= 0:
+            if coords == [len(grid)-1, len(grid[0])-1] and he >= 1:
+                print("returning true!")
+                # breakpoint()
                 return True
             
             for neighbor in getNeighbors(coords, grid):
@@ -59,10 +61,11 @@ def getNeighbors(coords, grid):
 
 s = Solution()
 
-grid = [[0,1,0,0,0],
-        [0,1,0,1,0],
-        [0,0,0,1,0]]
-health = 1
+grid = [[0,1,1,0,0,0],
+        [1,0,1,0,0,0],
+        [0,1,1,1,0,1],
+        [0,0,1,0,1,0]]
+health = 3
 
 ans = s.findSafeWalk(grid, health)
 print("ans:", ans)
