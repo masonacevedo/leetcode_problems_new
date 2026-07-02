@@ -4,13 +4,16 @@ from collections import deque
 class Solution:
     def findSafeWalk(self, grid: List[List[int]], health: int) -> bool:
         
-
-        start = ([0,0], health)
+        if grid[0][0] == 0:
+            start = ([0,0], health)
+        else:
+            start = ([0,0], health-1)
 
         queue = deque([start])
         seenBefore = set()
         while len(queue) > 0:
             coords, he = queue.popleft()
+            # breakpoint()
             if tuple(coords + [he]) in seenBefore:
                 continue
             # print(len(queue))
@@ -63,13 +66,9 @@ def getNeighbors(coords, grid):
 
 s = Solution()
 
-grid = [
-    [0,1,1,0,0,0],
-    [1,0,1,0,0,0],
-    [0,1,1,1,0,1],
-    [0,0,1,0,1,0]]
+grid = [[1,1,1,1]]
 
-health = 3
+health = 4
 
 ans = s.findSafeWalk(grid, health)
 print("ans:", ans)
