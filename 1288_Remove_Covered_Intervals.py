@@ -1,28 +1,34 @@
 from typing import List
 class Solution:
     def removeCoveredIntervals(self, intervals: List[List[int]]) -> int:
-        ans = len(intervals)
+
+        covered_set = set([])
         for i in range(0, len(intervals)):
             for j in range(i+1, len(intervals)):
-                print("intervals[i]:", intervals[i])
-                print("intervals[j]:", intervals[j])
-                breakpoint()
                 if covered(intervals[i], intervals[j]):
-                    ans -= 1
+                    covered_set.add(tuple(intervals[i]))
+                elif covered(intervals[j], intervals[i]):
+                    covered_set.add(tuple(intervals[j]))
         
-        return ans
+        return len(intervals) - len(covered_set)
 
 def covered(interval_1, interval_2):
 
     a,b = interval_1
     c,d = interval_2
 
-    return ((c <= a) and (b <= d)) or (a <= c) and (d <= b)
+    return ((c <= a) and (b <= d))
 
 
 
 s = Solution()
-intervals = [[1,4],[3,6],[2,8]]
+
+
+intervals = [
+    [10, 20],
+    [15, 25],
+    [16,17]
+]
 
 ans = s.removeCoveredIntervals(intervals)
 print("ans:", ans)
