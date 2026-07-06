@@ -3,7 +3,7 @@ from typing import List
 
 class Solution:
     def minScore(self, n: int, roads: List[List[int]]) -> int:
-        
+
         adjList = {}
 
         for i in range(1, n+1):
@@ -14,21 +14,22 @@ class Solution:
             source, dest, distance = road
             adjList[source].append((dest, distance))
             adjList[dest].append((source, distance))
-        
-        
-        bestKnown = {node: float('inf') for node in adjList.keys()}
-        bestKnown[source] = 0
 
+        queue = deque([1])
         seenBefore = set()
 
-        queue = deque([])
+        allDistances = []
+        while len(queue) > 0:
+            current = queue.popleft()
 
-        while len(seenBefore) < n:
-            curent = queue.popleft()
-            breakpoint()
+            for neighbor, d in adjList[current]:
+                allDistances.append(d)
+                if neighbor not in seenBefore:
+                    queue.append(neighbor)
+
             seenBefore.add(current)
 
-        # breakpoint()
+        return min(allDistances)
 
 
 s = Solution()
